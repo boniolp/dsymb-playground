@@ -25,7 +25,7 @@ def run_explore_frame():
 	uploaded_ts = st.file_uploader("Upload your time series",accept_multiple_files=True)
 	if uploaded_ts is not None:
 		try:
-            		all_ts = []
+			all_ts = []
 			for ts in uploaded_ts:
 				all_ts.append(np.genfromtxt(ts, delimiter=','))
             
