@@ -27,22 +27,22 @@ def run_explore_frame():
 	if len(uploaded_ts) == 1:
 		st.markdown("Multiple time series should be provided")
 	elif len(uploaded_ts) >= 2:
-		try:
-			all_ts = []
-			for ts in uploaded_ts:
-				all_ts.append(np.genfromtxt(ts, delimiter=','))
-            
-			time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-			fig = plt.figure(10,50)
-			for i in range(len(all_ts)):
-				plt.subplot(len(all_ts),1,i+1)
-				plt.plot(all_ts[i])
-			st.pyplot(fig)
+		#try:
+		all_ts = []
+		for ts in uploaded_ts:
+			all_ts.append(np.genfromtxt(ts, delimiter=','))
+    
+		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
+		fig = plt.figure(10,50)
+		for i in range(len(all_ts)):
+			plt.subplot(len(all_ts),1,i+1)
+			plt.plot(all_ts[i])
+		st.pyplot(fig)
 
             
             
-		except Exception as e:
-			st.markdown('file format not supported yet, please upload a time series in the format described in the about tab: {}'.format(e))
+		#except Exception as e:
+		#	st.markdown('file format not supported yet, please upload a time series in the format described in the about tab: {}'.format(e))
     
 
 def run_compare_frame():
