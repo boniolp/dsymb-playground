@@ -20,7 +20,7 @@ def run():
         page_title="dSymb",
     )
 
-    st.write("# Welcome to Streamlit! 👋")
+    st.write("# Welcome to Symbol! 👋")
 
     tab_explore, tab_compare, tab_about = st.tabs(["Explore", "Compare", "About"])  
 
