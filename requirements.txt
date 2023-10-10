@@ -8,3 +8,7 @@ plotly
 joblib
 scipy
 sklearn
+import seaborn
+ruptures
+weighted_levenshtein
+aeon
