@@ -33,7 +33,7 @@ def run_explore_frame():
 			all_ts.append(np.genfromtxt(ts, delimiter=','))
     
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-		fig = plt.figure(10,50)
+		fig = plt.figure(figsize=(10,50))
 		for i in range(len(all_ts)):
 			plt.subplot(len(all_ts),1,i+1)
 			plt.plot(all_ts[i])
