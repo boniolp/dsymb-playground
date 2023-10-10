@@ -5,3 +5,6 @@ pydeck
 streamlit
 matplotlib
 plotly
+joblib
+scipy
+sklearn
