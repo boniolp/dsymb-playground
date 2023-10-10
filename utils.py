@@ -26,10 +26,10 @@ def plot_time_series(ts):
 	fig = make_subplots(rows=len(ts[0]), cols=1,shared_xaxes=True)
 	for i in range(len(ts[0])):
 		fig.add_trace(
-			go.Scattergl(x=list(range(len(ts))), y=ts[:,i]),
+			go.Scattergl(x=list(range(len(ts))), y=ts[:,i],mode = 'lines', line = dict(color = 'white', width=3)),
 			row=i+1, col=1
 		)
-	fig.update_layout(height=2000, title_text="Time Series")
+	fig.update_layout(height=2000, title_text="Time Series",showlegend=False)
 	st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
