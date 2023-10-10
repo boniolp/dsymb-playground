@@ -43,7 +43,7 @@ def run_explore_frame():
 			all_ts.append(np.genfromtxt(ts, delimiter=','))
     
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-		plot_time_series(ts[time_series_selected])
+		plot_time_series(all_ts[time_series_selected])
 		
 
             
