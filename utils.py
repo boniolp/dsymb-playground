@@ -16,10 +16,20 @@ import inspect
 import textwrap
 import numpy as np
 import matplotlib.pyplot as plt
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 import streamlit as st
 
 
+def plot_time_series(ts):
+	fig = make_subplots(rows=len(ts[0]), cols=1)
+	for i in range(len(ts[0])):
+		fig.add_trace(
+			go.Scattergl(x=list(range(len(ts))), y=ts[:,i]),
+			row=i, col=1
+		)
+	st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
 	st.markdown('# Explore')
@@ -33,11 +43,8 @@ def run_explore_frame():
 			all_ts.append(np.genfromtxt(ts, delimiter=','))
     
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-		fig = plt.figure(figsize=(10,50))
-		for i in range(len(all_ts[time_series_selected][0])):
-			plt.subplot(len(all_ts[time_series_selected][0]),1,i+1)
-			plt.plot(all_ts[time_series_selected][:,i])
-		st.pyplot(fig)
+		plot_time_series(ts[time_series_selected])
+		
 
             
             
