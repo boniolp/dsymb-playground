@@ -29,6 +29,7 @@ def plot_time_series(ts):
 			go.Scattergl(x=list(range(len(ts))), y=ts[:,i]),
 			row=i+1, col=1
 		)
+	fig.update_layout(height=600, title_text="Time Series")
 	st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
