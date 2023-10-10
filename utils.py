@@ -36,7 +36,7 @@ def run_explore_frame():
 		fig = plt.figure(figsize=(10,50))
 		for i in range(len(all_ts[time_series_selected][0])):
 			plt.subplot(len(all_ts[time_series_selected][0]),1,i+1)
-			plt.plot(all_ts[time_series_selected][,:i])
+			plt.plot(all_ts[time_series_selected][:,i])
 		st.pyplot(fig)
 
             
