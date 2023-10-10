@@ -26,3 +26,13 @@ def show_code(demo):
         st.markdown("## Code")
         sourcelines, _ = inspect.getsourcelines(demo)
         st.code(textwrap.dedent("".join(sourcelines[1:])))
+
+
+def run_explore_frame():
+    return st.markdown('# Explore')
+
+def run_compare_frame():
+    return st.markdown('# Compare')
+
+def run_about_frame():
+    return st.markdown('# About')
