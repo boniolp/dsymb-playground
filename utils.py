@@ -27,7 +27,7 @@ def plot_time_series(ts):
 	for i in range(len(ts[0])):
 		fig.add_trace(
 			go.Scattergl(x=list(range(len(ts))), y=ts[:,i]),
-			row=i, col=1
+			row=i+1, col=1
 		)
 	st.plotly_chart(fig, use_container_width=True)
 
