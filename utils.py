@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import plotly.express as px
+import plotly.figure_factory as ff
 
 import streamlit as st
 
@@ -34,19 +34,35 @@ def preprocess_data(uploaded_ts):
 
 
 def plot_symbolization(df_temp):
-	fig = px.timeline(df_temp, x_start='segment_start', x_end='segment_end', y='segment_symbol')
+	tmp_df = df_temp
+	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'segment_symbol': 'Task'})
+	tmp_df['Task'] = tmp_df['Task'].apply(str)
+	fig = ff.create_gantt(tmp_df, index_col = 'Task',  bar_width = 0.4, show_colorbar=True,group_tasks=True)
+	
+	fig = px.timeline(df_temp[], x_start='segment_start', x_end='segment_end', y='segment_symbol')
 	fig.update_layout(xaxis_type='linear')
 	st.plotly_chart(fig, use_container_width=True)
 	
 
 def plot_time_series(ts):
-	fig = make_subplots(rows=len(ts[0]), cols=1,shared_xaxes=True)
+	
+	tmp_df = df_temp
+	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
+	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
+	tmp_df['Task'] = tmp_df['Task'].apply(str)
+	fig_symb = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True)
+	
+	fig = make_subplots(rows=len(ts[0])+1, cols=1,shared_xaxes=True)
+
+	for trace in fig_symb.data:
+    		fig.add_trace(trace, row=1, col=1)
+	
 	for i in range(len(ts[0])):
 		fig.add_trace(
 			go.Scattergl(x=list(range(len(ts))), y=ts[:,i],mode = 'lines', line = dict(color = 'white', width=1)),
-			row=i+1, col=1
+			row=i+2, col=1
 		)
-	fig.update_layout(height=2000, title_text="Time Series",showlegend=False)
+	fig.update_layout(xaxis_type='linear',height=2000, title_text="Time Series",showlegend=False)
 	st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
@@ -65,7 +81,7 @@ def run_explore_frame():
 		
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
 		st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
-		plot_symbolization(df_temp.loc[df_temp['signal_index']==time_series_selected])
+		#plot_symbolization(df_temp.loc[df_temp['signal_index']==time_series_selected])
 		plot_time_series(all_ts[time_series_selected])
 		
 		
