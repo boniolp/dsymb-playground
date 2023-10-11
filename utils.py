@@ -34,7 +34,8 @@ def preprocess_data(uploaded_ts):
 
 
 def plot_symbolization(df_temp):
-	fig = px.timeline(df_temp, x_start='segment_start', x_end='segment_end', y='segment_symbol')
+	fig = px.timeline(df_temp, x_start='segment_start', x_end='segment_end', index_col='segment_symbol',y='signal_index')
+	fig.update_layout(xaxis_type='linear')
 	st.plotly_chart(fig, use_container_width=True)
 	
 
