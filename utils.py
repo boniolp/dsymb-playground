@@ -63,7 +63,7 @@ def run_explore_frame():
 		D1,df_temp,lookup_table = dsym(all_ts,N_symbol)
 		
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-		#st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
+		st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
 		plot_symbolization(df_temp.loc[df_temp['signal_index']==time_series_selected])
 		plot_time_series(all_ts[time_series_selected])
 		
