@@ -21,6 +21,8 @@ import plotly.graph_objects as go
 
 import streamlit as st
 
+from dsymb import *
+
 
 def plot_time_series(ts):
 	fig = make_subplots(rows=len(ts[0]), cols=1,shared_xaxes=True)
@@ -34,6 +36,7 @@ def plot_time_series(ts):
 
 def run_explore_frame():
 	st.markdown('# Explore')
+	N_symbol = st.slider('Number of symbols', 0, 25, 5)
 	uploaded_ts = st.file_uploader("Upload your time series",accept_multiple_files=True)
 	if len(uploaded_ts) == 1:
 		st.markdown("Multiple time series should be provided")
@@ -42,7 +45,12 @@ def run_explore_frame():
 		all_ts = []
 		for ts in uploaded_ts:
 			all_ts.append(np.genfromtxt(ts, delimiter=','))
-    
+
+		with st.spinner('Computing dsymb...'):
+			D1,df_temp,lookup_table = dsym(list_of_multivariate_signals,N_symbol)
+		
+		st.dataframe(df_temp)
+		
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
 		plot_time_series(all_ts[time_series_selected])
 		
