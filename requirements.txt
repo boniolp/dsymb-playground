@@ -7,7 +7,7 @@ matplotlib
 plotly
 joblib
 scipy
-sklearn
+scikit-learn
 seaborn
 ruptures
 weighted_levenshtein
