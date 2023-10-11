@@ -42,7 +42,8 @@ def plot_time_series(ts):
 	st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
-	st.markdown('# Explore')
+	st.markdown('## Explore Your dataset')
+	st.markdown('Select the number of symbols to represent your time series. You can then drop your dataset (each time series in one .csv file with the shape (n_timestamp,n_dim).')
 	N_symbol = st.slider('Number of symbols', 0, 25, 5)
 	uploaded_ts = st.file_uploader("Upload your time series",accept_multiple_files=True)
 	if len(uploaded_ts) == 1:
