@@ -169,7 +169,7 @@ def get_multiscale_seg(X,n_clusters):
 
     return labels,lookup_table
 
-@st.cache_data
+@st.cache_data(ttl=3600,max_entries=2)
 def dsym(list_of_multivariate_signals,N_symbol):
 
     pen_factor=1000000
