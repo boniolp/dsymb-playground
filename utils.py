@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
-
+import gc
 import streamlit as st
 
 from dsymb import *
@@ -28,13 +28,14 @@ r = lambda: random.randint(0,255)
 DEFAULT_PLOTLY_COLORS=['#%02X%02X%02X' % (r(),r(),r()) for i in range(25)]
 
 
-@st.cache_data(ttl=3600,max_entries=2)
+@st.cache_data(ttl=3600,max_entries=1)
 def preprocess_data(uploaded_ts):
 	with st.spinner('Preprocessing data...'):
 		all_ts = []
 		for ts in uploaded_ts:
 			all_ts.append(np.genfromtxt(ts, delimiter=','))	
 	return all_ts
+	gc.collect()
 
 
 def plot_symbolization(df_temp):
@@ -45,11 +46,13 @@ def plot_symbolization(df_temp):
 	fig = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True,colors=DEFAULT_PLOTLY_COLORS[:len(set(tmp_df['segment_symbol'].values))])
 	fig.update_layout(xaxis_type='linear', height=1000,title_text="All symbolized Time Series")
 	st.plotly_chart(fig, use_container_width=True)
+	gc.collect()
+
 	
 
-def plot_time_series(ts,df_temp):
+def plot_time_series(ts,tmp_df):
 	
-	tmp_df = df_temp.copy()
+	#tmp_df = df_temp.copy()
 	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
 	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
 	tmp_df['Task'] = tmp_df['Task'].apply(str)
@@ -67,6 +70,7 @@ def plot_time_series(ts,df_temp):
 		)
 	fig.update_layout(xaxis_type='linear',height=2000, title_text="Time Series",showlegend=False)
 	st.plotly_chart(fig, use_container_width=True)
+	gc.collect()
 
 def run_explore_frame():
 	st.markdown('## Explore Your dataset')
@@ -89,6 +93,7 @@ def run_explore_frame():
 
 		with tab_all:
 			plot_symbolization(df_temp)
+	gc.collect()
 			
 		
 

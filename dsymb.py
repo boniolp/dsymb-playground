@@ -6,7 +6,7 @@ import seaborn as sns
 import os
 from sklearn.utils import Bunch
 import random
-
+import gc
 
 from segmentation import Segmentation
 from segment_feature import SegmentFeature
@@ -169,7 +169,7 @@ def get_multiscale_seg(X,n_clusters):
 
     return labels,lookup_table
 
-@st.cache_data(ttl=3600,max_entries=2)
+@st.cache_data(ttl=3600,max_entries=1)
 def dsym(list_of_multivariate_signals,N_symbol):
     with st.spinner('Computing dsymb...'):
         pen_factor=1000000
@@ -206,11 +206,8 @@ def dsym(list_of_multivariate_signals,N_symbol):
                 "mean",
             ]
         )
-        segment_features_df = seg_feat.fit(b_segmentation).transform(b_segmentation)
-
-        df_temp = segment_features_df.copy()
-        raw_X=df_temp.to_numpy() 
-        X=raw_X[:,:len(list_of_multivariate_signals[0][0])] 
+        df_temp = seg_feat.fit(b_segmentation).transform(b_segmentation)
+        X=df_temp.to_numpy()[:,:len(list_of_multivariate_signals[0][0])] 
 
         labels,lookup_table = get_multiscale_seg(X,N_symbol)
         df_temp["segment_symbol"]=labels
@@ -218,6 +215,7 @@ def dsym(list_of_multivariate_signals,N_symbol):
         symboli=compute_symbolisation(df_temp,Nsig)
         D1=compute_matrix_distance(symboli,lookup_table,Nsig,len(lookup_table))
 
+    gc.collect()
     return D1,df_temp,lookup_table
 
 
