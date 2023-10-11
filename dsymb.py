@@ -161,14 +161,14 @@ def reconstruct_signal_quant(id_signal,df_temp,centroids):
     return x_recons
 
 
-def get_multiscale_seg(X,Nsub,Nmov,n_clusters):
+def get_multiscale_seg(X,n_clusters):
     labels,lookup_table,centroids=my_clustering(n_clusters,X)
     lookup_table = lookup_table/np.max(lookup_table)
 
     return labels,lookup_table
 
 
-def dsym(list_of_multivariate_signals,labels_gesture,dict_label,N_symbol):
+def dsym(list_of_multivariate_signals,N_symbol):
 
     pen_factor=1000000
     Nsig=len(list_of_multivariate_signals)
@@ -206,38 +206,16 @@ def dsym(list_of_multivariate_signals,labels_gesture,dict_label,N_symbol):
     )
     segment_features_df = seg_feat.fit(b_segmentation).transform(b_segmentation)
 
-
-    list_labels = []
-    for i in range(len(segment_features_df)):
-        id_signal = segment_features_df['signal_index'].values[i]
-        list_labels.append(dict_label[labels_gesture[id_signal]])
-
-
     df_temp = segment_features_df.copy()
-    df_temp['movement_ID'] = list_labels
-
     raw_X=df_temp.to_numpy() 
     X=raw_X[:,:len(list_of_multivariate_signals[0][0])] 
 
-
-    id_mov=np.zeros((Nsig,))
-    for i in range(Nsig):
-        k=np.where(df_temp["signal_index"]==i)
-        k=k[0]
-        id_mov[i]=df_temp["movement_ID"][k[0]]
-    id_mov=id_mov.astype(int)
-
-    Nsub=len(list_of_multivariate_signals)
-    Nmov=len(dict_label.keys())
-    Nsym=N_symbol
-    n_clusters=Nsym
-
-    labels,lookup_table = get_multiscale_seg(X,Nsub,Nmov,N_symbol)
+    labels,lookup_table = get_multiscale_seg(X,N_symbol)
     df_temp["segment_symbol"]=labels
 
     symboli=compute_symbolisation(df_temp,Nsig)
     D1=compute_matrix_distance(symboli,lookup_table,Nsig,len(lookup_table))
 
-    return D1,id_mov,df_temp,lookup_table
+    return D1,df_temp,lookup_table
 
 
