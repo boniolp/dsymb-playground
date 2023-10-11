@@ -18,6 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import plotly.express as px
 
 import streamlit as st
 
@@ -30,6 +31,12 @@ def preprocess_data(uploaded_ts):
 		for ts in uploaded_ts:
 			all_ts.append(np.genfromtxt(ts, delimiter=','))	
 	return all_ts
+
+
+def plot_symbolization(df_temp):
+	fig = px.timeline(df, x_start='segment_start', x_end='segment_end', y='segment_symbol')
+	st.plotly_chart(fig, use_container_width=True)
+	
 
 def plot_time_series(ts):
 	fig = make_subplots(rows=len(ts[0]), cols=1,shared_xaxes=True)
@@ -56,8 +63,9 @@ def run_explore_frame():
 		D1,df_temp,lookup_table = dsym(all_ts,N_symbol)
 		
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-		st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
+		#st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
 		plot_time_series(all_ts[time_series_selected])
+		plot_symbolization(df_temp)
 		
 
             
