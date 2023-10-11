@@ -24,6 +24,18 @@ import streamlit as st
 
 from dsymb import *
 
+DEFAULT_PLOTLY_COLORS=[
+	"aliceblue","beige","blueviolet",
+	"chartreuse","cornsilk","darkgreen",
+	"darkorange","darksalmon", "darkseagreen",
+	"floralwhite", "forestgreen","gold","greenyellow",
+	"ivory","lemonchiffon","lightgoldenrodyellow",
+	"lightgreen","lightskyblue","lightyellow",
+	"magenta","mediumblue","mediumseagreen",
+	"mediumturquoise","orchid","royalblue",
+]
+
+
 @st.cache_data(ttl=3600,max_entries=2)
 def preprocess_data(uploaded_ts):
 	with st.spinner('Preprocessing data...'):
@@ -38,7 +50,7 @@ def plot_symbolization(df_temp):
 	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
 	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
 	tmp_df['Task'] = tmp_df['Task'].apply(str)
-	fig = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True)
+	fig = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True,colors=DEFAULT_PLOTLY_COLORS[:len(set(tmp_df['segment_symbol'].values))])
 	fig.update_layout(xaxis_type='linear', height=1000,title_text="All symbolized Time Series")
 	st.plotly_chart(fig, use_container_width=True)
 	
@@ -49,7 +61,7 @@ def plot_time_series(ts,df_temp):
 	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
 	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
 	tmp_df['Task'] = tmp_df['Task'].apply(str)
-	fig_symb = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True)
+	fig_symb = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True,colors=DEFAULT_PLOTLY_COLORS[:len(set(tmp_df['segment_symbol'].values))])
 	
 	fig = make_subplots(rows=len(ts[0])+1, cols=1,shared_xaxes=True)
 
