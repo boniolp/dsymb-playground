@@ -38,11 +38,6 @@ def plot_symbolization(df_temp):
 	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'segment_symbol': 'Task'})
 	tmp_df['Task'] = tmp_df['Task'].apply(str)
 	fig = ff.create_gantt(tmp_df, index_col = 'Task',  bar_width = 0.4, show_colorbar=True,group_tasks=True)
-	
-	fig = px.timeline(df_temp[], x_start='segment_start', x_end='segment_end', y='segment_symbol')
-	fig.update_layout(xaxis_type='linear')
-	st.plotly_chart(fig, use_container_width=True)
-	
 
 def plot_time_series(ts):
 	
