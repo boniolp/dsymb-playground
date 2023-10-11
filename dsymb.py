@@ -38,6 +38,8 @@ from aeon.distances import (
     wdtw_distance,
 )
 
+import streamlit as st
+
 def compute_weighted_lev(
     n_symbols,
     symb_signal_1,
@@ -167,7 +169,7 @@ def get_multiscale_seg(X,n_clusters):
 
     return labels,lookup_table
 
-
+@st.cache_data
 def dsym(list_of_multivariate_signals,N_symbol):
 
     pen_factor=1000000
