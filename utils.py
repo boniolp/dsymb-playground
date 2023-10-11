@@ -23,6 +23,13 @@ import streamlit as st
 
 from dsymb import *
 
+@st.cache_data
+def preprocess_data(uploaded_ts):
+	with st.spinner('Preprocessing data...'):
+		all_ts = []
+		for ts in uploaded_ts:
+			all_ts.append(np.genfromtxt(ts, delimiter=','))	
+		return all_ts
 
 def plot_time_series(ts):
 	fig = make_subplots(rows=len(ts[0]), cols=1,shared_xaxes=True)
@@ -42,9 +49,7 @@ def run_explore_frame():
 		st.markdown("Multiple time series should be provided")
 	elif len(uploaded_ts) >= 2:
 		#try:
-		all_ts = []
-		for ts in uploaded_ts:
-			all_ts.append(np.genfromtxt(ts, delimiter=','))
+		all_ts = preprocess_data(uploaded_ts)
 
 		with st.spinner('Computing dsymb...'):
 			D1,df_temp,lookup_table = dsym(all_ts,N_symbol)
