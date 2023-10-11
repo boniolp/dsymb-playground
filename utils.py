@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import plotly.figure_factory as ff
+import plotly.express as px
 
 import streamlit as st
 
