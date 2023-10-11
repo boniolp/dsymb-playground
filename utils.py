@@ -34,7 +34,7 @@ def preprocess_data(uploaded_ts):
 
 
 def plot_symbolization(df_temp):
-	fig = px.timeline(df, x_start='segment_start', x_end='segment_end', y='segment_symbol')
+	fig = px.timeline(df_temp, x_start='segment_start', x_end='segment_end', y='segment_symbol')
 	st.plotly_chart(fig, use_container_width=True)
 	
 
@@ -64,8 +64,9 @@ def run_explore_frame():
 		
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
 		#st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
-		plot_time_series(all_ts[time_series_selected])
 		plot_symbolization(df_temp)
+		plot_time_series(all_ts[time_series_selected])
+		
 		
 
             
