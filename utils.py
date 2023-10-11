@@ -29,7 +29,7 @@ def preprocess_data(uploaded_ts):
 		all_ts = []
 		for ts in uploaded_ts:
 			all_ts.append(np.genfromtxt(ts, delimiter=','))	
-		return all_ts
+	return all_ts
 
 def plot_time_series(ts):
 	fig = make_subplots(rows=len(ts[0]), cols=1,shared_xaxes=True)
@@ -51,8 +51,8 @@ def run_explore_frame():
 		#try:
 		all_ts = preprocess_data(uploaded_ts)
 
-		with st.spinner('Computing dsymb...'):
-			D1,df_temp,lookup_table = dsym(all_ts,N_symbol)
+		
+		D1,df_temp,lookup_table = dsym(all_ts,N_symbol)
 		
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
 		st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
