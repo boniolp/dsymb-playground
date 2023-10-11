@@ -39,9 +39,9 @@ def plot_symbolization(df_temp):
 	tmp_df['Task'] = tmp_df['Task'].apply(str)
 	fig = ff.create_gantt(tmp_df, index_col = 'Task',  bar_width = 0.4, show_colorbar=True,group_tasks=True)
 
-def plot_time_series(ts):
+def plot_time_series(ts,df_temp):
 	
-	tmp_df = df_temp
+	tmp_df = df_temp.copy()
 	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
 	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
 	tmp_df['Task'] = tmp_df['Task'].apply(str)
@@ -77,7 +77,7 @@ def run_explore_frame():
 		time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
 		st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
 		#plot_symbolization(df_temp.loc[df_temp['signal_index']==time_series_selected])
-		plot_time_series(all_ts[time_series_selected])
+		plot_time_series(all_ts[time_series_selected],df_temp.loc[df_temp['signal_index']==time_series_selected])
 		
 		
 
