@@ -25,9 +25,7 @@ import streamlit as st
 from dsymb import *
 
 r = lambda: random.randint(0,255)
-DEFAULT_PLOTLY_COLORS=
-    '#%02X%02X%02X' % (r(),r(),r()) for i in range(25)
-]
+DEFAULT_PLOTLY_COLORS=['#%02X%02X%02X' % (r(),r(),r()) for i in range(25)]
 
 
 @st.cache_data(ttl=3600,max_entries=2)
