@@ -20,7 +20,8 @@ def run():
         page_title="dSymb",
     )
 
-    st.write("# Welcome to Symbol! 👋")
+    st.write("# Welcome to Symbol!")
+    st.markdown("Explore your time series dataset and through a meaningful symbolic representation.")
 
     tab_explore, tab_compare, tab_about = st.tabs(["Explore", "Compare", "About"])  
 
