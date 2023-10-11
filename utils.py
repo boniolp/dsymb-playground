@@ -23,7 +23,7 @@ import streamlit as st
 
 from dsymb import *
 
-@st.cache_data
+@st.cache_data(ttl=3600,max_entries=10)
 def preprocess_data(uploaded_ts):
 	with st.spinner('Preprocessing data...'):
 		all_ts = []
