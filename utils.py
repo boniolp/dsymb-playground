@@ -47,7 +47,7 @@ def run_explore_frame():
 			all_ts.append(np.genfromtxt(ts, delimiter=','))
 
 		with st.spinner('Computing dsymb...'):
-			D1,df_temp,lookup_table = dsym(list_of_multivariate_signals,N_symbol)
+			D1,df_temp,lookup_table = dsym(all_ts,N_symbol)
 		
 		st.dataframe(df_temp)
 		
