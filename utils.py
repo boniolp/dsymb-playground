@@ -24,15 +24,9 @@ import streamlit as st
 
 from dsymb import *
 
-DEFAULT_PLOTLY_COLORS=[
-	"aliceblue","beige","blueviolet",
-	"chartreuse","cornsilk","darkgreen",
-	"darkorange","darksalmon", "darkseagreen",
-	"floralwhite", "forestgreen","gold","greenyellow",
-	"ivory","lemonchiffon","lightgoldenrodyellow",
-	"lightgreen","lightskyblue","lightyellow",
-	"magenta","mediumblue","mediumseagreen",
-	"mediumturquoise","orchid","royalblue",
+r = lambda: random.randint(0,255)
+DEFAULT_PLOTLY_COLORS=
+    '#%02X%02X%02X' % (r(),r(),r()) for i in range(25)
 ]
 
 
