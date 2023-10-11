@@ -171,52 +171,52 @@ def get_multiscale_seg(X,n_clusters):
 
 @st.cache_data(ttl=3600,max_entries=2)
 def dsym(list_of_multivariate_signals,N_symbol):
+    with st.spinner('Computing dsymb...'):
+        pen_factor=1000000
+        Nsig=len(list_of_multivariate_signals)
 
-    pen_factor=1000000
-    Nsig=len(list_of_multivariate_signals)
-
-    # Define the segmentation
-    seg = Segmentation(
-        uniform_or_adaptive="adaptive",
-        mean_or_slope="mean",
-        n_segments=None,
-        pen_factor=pen_factor,
-    )
+        # Define the segmentation
+        seg = Segmentation(
+            uniform_or_adaptive="adaptive",
+            mean_or_slope="mean",
+            n_segments=None,
+            pen_factor=pen_factor,
+        )
       
-    echelle=np.zeros((Nsig,))
-    for i in range(Nsig):
-        echelle[i]=np.mean(np.var(list_of_multivariate_signals[i],axis=0))
+        echelle=np.zeros((Nsig,))
+        for i in range(Nsig):
+            echelle[i]=np.mean(np.var(list_of_multivariate_signals[i],axis=0))
         
-    nb_rupt=np.zeros((Nsig,))
-    big_list_of_multivariate_signals=[]
-    big_list_of_bkps=[]
-    for sig in range(Nsig):
-        x=list_of_multivariate_signals[sig]
-        big_list_of_multivariate_signals.append(x)
-        n1,n2=np.shape(x)
-        pen=n1*echelle[sig]
-        algo = rpt.KernelCPD(kernel="linear", jump=1).fit(list_of_multivariate_signals[sig])
-        result = algo.predict(pen=pen)
-        big_list_of_bkps.append(result)
-        nb_rupt[sig]=len(result)
+        nb_rupt=np.zeros((Nsig,))
+        big_list_of_multivariate_signals=[]
+        big_list_of_bkps=[]
+        for sig in range(Nsig):
+            x=list_of_multivariate_signals[sig]
+            big_list_of_multivariate_signals.append(x)
+            n1,n2=np.shape(x)
+            pen=n1*echelle[sig]
+            algo = rpt.KernelCPD(kernel="linear", jump=1).fit(list_of_multivariate_signals[sig])
+            result = algo.predict(pen=pen)
+            big_list_of_bkps.append(result)
+            nb_rupt[sig]=len(result)
 
-    b_segmentation=Bunch(list_of_multivariate_signals=big_list_of_multivariate_signals,list_of_bkps=big_list_of_bkps)
-    seg_feat = SegmentFeature(
-        features_names=[
-            "mean",
-        ]
-    )
-    segment_features_df = seg_feat.fit(b_segmentation).transform(b_segmentation)
+        b_segmentation=Bunch(list_of_multivariate_signals=big_list_of_multivariate_signals,list_of_bkps=big_list_of_bkps)
+        seg_feat = SegmentFeature(
+            features_names=[
+                "mean",
+            ]
+        )
+        segment_features_df = seg_feat.fit(b_segmentation).transform(b_segmentation)
 
-    df_temp = segment_features_df.copy()
-    raw_X=df_temp.to_numpy() 
-    X=raw_X[:,:len(list_of_multivariate_signals[0][0])] 
+        df_temp = segment_features_df.copy()
+        raw_X=df_temp.to_numpy() 
+        X=raw_X[:,:len(list_of_multivariate_signals[0][0])] 
 
-    labels,lookup_table = get_multiscale_seg(X,N_symbol)
-    df_temp["segment_symbol"]=labels
+        labels,lookup_table = get_multiscale_seg(X,N_symbol)
+        df_temp["segment_symbol"]=labels
 
-    symboli=compute_symbolisation(df_temp,Nsig)
-    D1=compute_matrix_distance(symboli,lookup_table,Nsig,len(lookup_table))
+        symboli=compute_symbolisation(df_temp,Nsig)
+        D1=compute_matrix_distance(symboli,lookup_table,Nsig,len(lookup_table))
 
     return D1,df_temp,lookup_table
 
