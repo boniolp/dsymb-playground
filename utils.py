@@ -81,8 +81,6 @@ def run_explore_frame():
 		tab_indiv, tab_all = st.tabs(["Each time series", "Dataset"])  
 		with tab_indiv:
 			time_series_selected = st.selectbox('Pick a time series', list(range(len(all_ts))))
-			st.dataframe(df_temp.loc[df_temp['signal_index']==time_series_selected])
-			#plot_symbolization(df_temp.loc[df_temp['signal_index']==time_series_selected])
 			plot_time_series(all_ts[time_series_selected],df_temp.loc[df_temp['signal_index']==time_series_selected])
 
 		with tab_all:
