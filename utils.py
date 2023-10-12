@@ -160,7 +160,37 @@ def run_explore_frame():
     
 
 def run_compare_frame():
-	st.markdown('# Compare')
+	st.markdown('## Compare')
 
 def run_about_frame():
-	st.markdown('# About')
+	st.markdown(
+		''' ## A fast interactive exploration of multivariate time series datasets
+
+		Symbol is a Python-based web interactive tool to visualize, navigate, and explore large multivariate time series datasets. It is based on a new symbolic representation, **dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 seconds for DTW-based analysis.
+
+		### Reference
+
+		> "dsymb: "<br/>
+		> Authors<br/>
+		> Proceedings of XXX, pages XXX-XXX, 2023<br/>
+
+		```bibtex
+		@article{symbol,
+		  title={},
+		  author={},
+		  journal={},
+		  volume={},
+		  number={},
+		  pages={},
+		  year={},
+		  publisher={}
+		}
+		```
+
+		## Contributors
+
+		* Paul Boniol (ENS Paris Saclay)
+		* Sylvain Combettes (ENS Paris Saclay)
+		* Charles Truong (ENS Paris Saclay)
+		* Laurent Oudre (ENS Paris Saclay)
+		''')
