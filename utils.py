@@ -163,7 +163,8 @@ def run_compare_frame():
 	st.markdown('## Compare')
 
 def run_about_frame():
-	st.markdown(f""" ## A fast interactive exploration of multivariate time series datasets
+	st.markdown(f""" 
+		## A fast interactive exploration of multivariate time series datasets
 		Symbol is a Python-based web interactive tool to visualize, navigate, and explore 
 		large multivariate time series datasets. It is based on a new symbolic representation, 
 		**dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time 
