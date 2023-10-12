@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">Symbol</h1>
-<h2 align="center">A fast interactive vizualisation of multivariate time series dataset</h2>
+<h2 align="center">A fast interactive exploration of multivariate time series datasets</h2>
 
 <div align="center">
 <p>
