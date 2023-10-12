@@ -1,7 +1,7 @@
 # Symbol
 
 <p align="center">
-<img width="130" src="./figures/Symbol_logo.png"/>
+<img width="230" src="./figures/Symbol_logo.png"/>
 </p>
 
 <h1 align="center">Symbol</h1>
