@@ -20,6 +20,9 @@ def run():
         page_title="dSymb",
     )
 
+    if 'ALL_TS' not in st.session_state:
+        st.session_state['ALL_TS'] = []
+
     st.write("# Welcome to Symbol!")
     st.markdown("Explore your time series dataset and through a meaningful symbolic representation.")
 
