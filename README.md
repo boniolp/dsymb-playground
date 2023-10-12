@@ -50,7 +50,7 @@ Symbol is a Python-based web interactive tool to visualize, navigate, and explor
 **Step 1:** Clone this repository using `git` and change into its root directory.
 
 ```bash
-git clone https://github.com/boniolp/MSAD.git
+git clone https://github.com/boniolp/symbol.git
 cd symbol/
 ```
 
