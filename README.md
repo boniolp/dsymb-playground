@@ -1,5 +1,3 @@
-# Symbol
-
 <p align="center">
 <img width="230" src="./figures/Symbol_logo.png"/>
 </p>
@@ -18,7 +16,7 @@
 <img width="500" src="./figures/demo_capture.gif"/>
 </p>
 
-Symbol is a python-based web interactive tool to visualize, navigate and explore large multivariate time series datasets. It is based on a new symbolic reprensetaiton, **dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimnensions and 5000 timestamps) require 20 seconds, instead of 2000 seconds for DTW-based analysis.
+Symbol is a Python-based web interactive tool to visualize, navigate, and explore large multivariate time series datasets. It is based on a new symbolic representation, **dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 seconds for DTW-based analysis.
 
 ### Reference
 
@@ -64,7 +62,7 @@ conda activate symbol
 pip install -r requirements.txt
 ```
 
-**Step 3:** You can use our tool in two differnt way: (i) Access online: https://symbol.streamlit.app/ (ii) Run locally (preferable for large time series datasets). To do so, run the following commands:
+**Step 3:** You can use our tool in two different ways: (i) Access online: https://symbol.streamlit.app/ (ii) Run locally (preferable for large time series datasets). To do so, run the following command:
 
 ```bash
 streamlit run app.py
