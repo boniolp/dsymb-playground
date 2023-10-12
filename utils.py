@@ -32,39 +32,20 @@ r = lambda: random.randint(50,255)
 DEFAULT_PLOTLY_COLORS={str(i):'#%02X%02X%02X' % (r(),r(),r()) for i in range(25)}
 
 about_text = f""" 
-		## A fast interactive exploration of multivariate time series datasets
-		Symbol is a Python-based web interactive tool to visualize, navigate, and explore 
-		large multivariate time series datasets. It is based on a new symbolic representation, 
-		**dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time 
-		series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 
-		seconds for DTW-based analysis.
+## A fast interactive exploration of multivariate time series datasets
+Symbol is a Python-based web interactive tool to visualize, navigate, and explore 
+large multivariate time series datasets. It is based on a new symbolic representation, 
+**dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time 
+series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 
+seconds for DTW-based analysis.
 
-		### Reference
+## Contributors
 
-		> "dsymb: "<br/>
-		> Authors<br/>
-		> Proceedings of XXX, pages XXX-XXX, 2023<br/>
-
-		```bibtex
-		@article{symbol,
-		  title={},
-		  author={},
-		  journal={},
-		  volume={},
-		  number={},
-		  pages={},
-		  year={},
-		  publisher={}
-		}
-		```
-
-		## Contributors
-
-		* Paul Boniol (ENS Paris Saclay)
-		* Sylvain Combettes (ENS Paris Saclay)
-		* Charles Truong (ENS Paris Saclay)
-		* Laurent Oudre (ENS Paris Saclay)
-		"""
+* Paul Boniol (ENS Paris Saclay)
+* Sylvain Combettes (ENS Paris Saclay)
+* Charles Truong (ENS Paris Saclay)
+* Laurent Oudre (ENS Paris Saclay)
+"""
 
 
 @st.cache_data(ttl=3600,max_entries=1,show_spinner=False)
