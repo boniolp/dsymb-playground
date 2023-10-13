@@ -10,5 +10,4 @@ scipy
 scikit-learn
 ruptures
 weighted_levenshtein
-aeon
 streamlit-plotly-events
