@@ -25,18 +25,6 @@ from sklearn.preprocessing import StandardScaler
 
 from weighted_levenshtein import lev
 
-from aeon.distances import (
-    ddtw_distance,
-    dtw_distance,
-    edr_distance,
-    erp_distance,
-    lcss_distance,
-    msm_distance,
-    twe_distance,
-    wddtw_distance,
-    wdtw_distance,
-)
-
 import streamlit as st
 
 def compute_weighted_lev(
