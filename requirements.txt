@@ -8,7 +8,6 @@ plotly
 joblib
 scipy
 scikit-learn
-seaborn
 ruptures
 weighted_levenshtein
 aeon
