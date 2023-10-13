@@ -62,7 +62,10 @@ conda activate symbol
 pip install -r requirements.txt
 ```
 
-**Step 3:** You can use our tool in two different ways: (i) Access online: https://symbol.streamlit.app/ (ii) Run locally (preferable for large time series datasets). To do so, run the following command:
+**Step 3:** You can use our tool in two different ways: 
+
+- Access online: https://symbol.streamlit.app/
+- Run locally (preferable for large time series datasets). To do so, run the following command:
 
 ```bash
 streamlit run app.py
