@@ -23,6 +23,7 @@ import plotly.express as px
 import gc
 import streamlit as st
 
+from constant import *
 
 from streamlit_plotly_events import plotly_events
 
@@ -31,21 +32,6 @@ from dsymb import *
 r = lambda: random.randint(50,255)
 DEFAULT_PLOTLY_COLORS={str(i):'#%02X%02X%02X' % (r(),r(),r()) for i in range(25)}
 
-about_text = f""" 
-## A fast interactive exploration of multivariate time series datasets
-Symbol is a Python-based web interactive tool to visualize, navigate, and explore 
-large multivariate time series datasets. It is based on a new symbolic representation, 
-**dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time 
-series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 
-seconds for DTW-based analysis.
-
-## Contributors
-
-* Paul Boniol (ENS Paris Saclay)
-* Sylvain Combettes (ENS Paris Saclay)
-* Charles Truong (ENS Paris Saclay)
-* Laurent Oudre (ENS Paris Saclay)
-"""
 
 
 @st.cache_data(ttl=3600,max_entries=1,show_spinner=False)
@@ -115,8 +101,11 @@ def get_data_step():
 	if len(uploaded_ts) == 1:
 		st.markdown("Multiple time series should be provided")
 	elif len(uploaded_ts) >= 2:
-		#try:
-		st.session_state.ALL_TS = preprocess_data(uploaded_ts)
+		try:
+			st.session_state.ALL_TS = preprocess_data(uploaded_ts)
+		except Exception as e:
+			st.error('An error occured while processing the files. Please Check if the time series have the correct format (n_timestamps,n_dims). The Exception is the following: {}', icon="🚨")
+    
 
 def Visualize_step():
 	if len(st.session_state.ALL_TS) > 1:
@@ -158,6 +147,7 @@ def run_explore_frame():
 	st.markdown('## Explore Your dataset')
 	st.markdown('Select the number of symbols to represent your time series. You can then drop your dataset (each time series in one .csv file with the shape (n_timestamp,n_dim).')
 	
+
 	
 	get_data_step()
 
@@ -168,13 +158,46 @@ def run_explore_frame():
 		
 
             
-            
-		#except Exception as e:
-		#	st.markdown('file format not supported yet, please upload a time series in the format described in the about tab: {}'.format(e))
-    
+   
 
 def run_compare_frame():
-	st.markdown('## Compare')
+
+
+	st.markdown(compare_text_1)
+
+	tab_data_desc, tab_basesline_desc = st.tabs(["Dataset Description", "Baselines Description"])  
+
+	with tab_data_desc:
+		st.markdown(data_JIGSAW)
+
+	with tab_basesline_desc:
+		st.markdown(Baseline_desc)		
+
+	st.markdown(compare_text_2)
+
+
+	df_exectime = pd.read_csv('data/eval/exectime.csv',index_col=0)
+	df_acc = pd.read_csv('data/eval/accuracy.csv',index_col=0)
+
+	#measure = st.selectbox('choose Evaluation Measures', list(df_acc.index))
+	distance = st.selectbox('choose Evaluation Measures', list(df_acc.columns))
+
+	fig_mat = plot_matrix(pd.read_csv('data/simMatrix/{}_DistanceMatrix.csv'.format(distance),index_col=0).to_numpy())	
+
+	st.plotly_chart(fig_mat, use_container_width=True)
+
+	st.markdown("### Clustering Performances")
+
+	fig_time = px.bar(
+		df_exectime,
+		title="Clustering execution time (in seconds)")
+	fig_time.update_yaxes(type="log",)
+	st.plotly_chart(fig_time, use_container_width=True)
+
+	fig_acc = px.bar(df_acc.T,barmode='group',title="Clustering accuracy")
+	st.plotly_chart(fig_acc, use_container_width=True)
+
+
 
 def run_about_frame():
 	st.markdown(about_text)
