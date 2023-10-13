@@ -70,6 +70,41 @@ def plot_symbolization(df_temp,mode):
 	fig.update_layout(xaxis_type='linear', height=1000,title_text="All symbolized Time Series")
 	return fig
 
+@st.cache_data(ttl=3600,max_entries=3,show_spinner=False)
+def plot_symbol_distr(df_temp,mode):
+	tmp_df = df_temp
+	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
+	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
+	tmp_df['Task'] = tmp_df['Task'].apply(str)
+	
+	all_max_length = []
+	for i in range(len(tmp_df)):
+		sig_index = tmp_df['Task'].values[i]
+		max_length = max(tmp_df.loc[tmp_df['Task'] == sig_index]['Finish'].values)
+		all_max_length.append(max_length)
+
+	bin_size = 0.01*max(all_max_length)
+
+	if mode == 'Normalized':
+		bin_size = 0.01
+		tmp_df['max'] = all_max_length
+		tmp_df['Start'] = tmp_df['Start'] / tmp_df['max']
+		tmp_df['Finish'] = tmp_df['Finish'] / tmp_df['max']
+
+	n_symbol = len(set(tmp_df['segment_symbol'].values))
+
+	fig = make_subplots(rows=len(list(set(tmp_df['segment_symbol'].values))), cols=1,shared_xaxes=True)
+
+	for i,symbol in enumerate(set(tmp_df['segment_symbol'].values)):
+		pos_symb = 0.5*np.array(tmp_df.loc[tmp_df['segment_symbol'] == symbol]['Finish'].values + tmp_df.loc[tmp_df['segment_symbol'] == symbol]['Start'].values)
+		fig_symb = ff.create_distplot([pos_symb],group_labels=['symbol {}'.format(symbol)],show_hist=True,colors=[DEFAULT_PLOTLY_COLORS[symbol]],bin_size=bin_size,show_curve=False,show_rug=False)
+		for trace in fig_symb.data:
+			fig.add_trace(trace, row=1+i, col=1)
+	fig.update_layout(xaxis_type='linear', height=min(1000,100*n_symbol),title_text="Symbol distribution over time")
+	return fig
+	
+
+
 	
 
 def plot_time_series(ts,tmp_df,dims=[0,20]):
@@ -134,6 +169,8 @@ def Visualize_step():
 				
 				fig = plot_symbolization(df_temp,mode=mode_length)
 				st.plotly_chart(fig, use_container_width=True)
+				fig_dist = plot_symbol_distr(df_temp,mode=mode_length)
+				st.plotly_chart(fig_dist, use_container_width=True)
 			elif mode == "Similarity Matrix":
 				fig = plot_matrix(D1)
 				st.plotly_chart(fig, use_container_width=True)
