@@ -72,6 +72,6 @@ streamlit run app.py
 ```
 
 You can then open the app using your web browser. You can upload any kind of time series (one file per time series) with the shape (n_timestamps,n_dims).
-
+A preprocessed version of the dataset [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX).
 
 
