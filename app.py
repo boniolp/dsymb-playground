@@ -26,7 +26,15 @@ def run():
 
     st.write("# Welcome to Symbol!")
     st.markdown(
-        "Explore your time series dataset and through a meaningful symbolic representation."
+        "Explore and interpret your multivariate time series data set using"
+        " the $d_{symb}$ symbolic representation."
+        " Use the `Explore` tab your visualize your raw time series along"
+        " with its computed $d_{symb}$ symbolization: the colorbars' list"
+        " of the symbolic sequences and the distance matrix between the"
+        " symbolic sequences."
+        " Use the `Compare` tab to assess the relevance of $d_{symb}$ compared"
+        " to other distance measures on the JIGSAWS data set (all results are"
+        " pre-computed)."
     )
 
     tab_explore, tab_compare, tab_about = st.tabs(

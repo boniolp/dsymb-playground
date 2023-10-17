@@ -37,7 +37,7 @@ DEFAULT_PLOTLY_COLORS = {
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def preprocess_data(uploaded_ts):
-    with st.spinner("Preprocessing data..."):
+    with st.spinner("Preprocessing your data set..."):
         all_ts = []
         for ts in uploaded_ts:
             all_ts.append(np.genfromtxt(ts, delimiter=","))
@@ -46,8 +46,8 @@ def preprocess_data(uploaded_ts):
 
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
-def plot_matrix(D1):
-    return px.imshow(D1, aspect="auto")
+def plot_matrix(D1, distance_name=""):
+    return px.imshow(D1, aspect="auto", title=f"Distance matrix with {distance_name}")
 
 
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
@@ -89,7 +89,10 @@ def plot_symbolization(df_temp, mode):
     fig.update_layout(
         xaxis_type="linear",
         height=1000,
-        title_text="All symbolized time series",
+        title_text="All symbolic sequences in the data set",
+        legend=dict(
+        	title=dict(text="Symbol")
+    	)
     )
     return fig
 
@@ -138,7 +141,7 @@ def plot_symbol_distr(df_temp, mode):
         )
         fig_symb = ff.create_distplot(
             [pos_symb],
-            group_labels=["symbol {}".format(symbol)],
+            group_labels=["{}".format(symbol)],
             show_hist=True,
             colors=[DEFAULT_PLOTLY_COLORS[symbol]],
             bin_size=bin_size,
@@ -150,7 +153,12 @@ def plot_symbol_distr(df_temp, mode):
     fig.update_layout(
         xaxis_type="linear",
         height=min(1000, 100 * n_symbols),
-        title_text="Symbol distribution over time",
+        title_text="Symbols' frequency over time",
+        xaxis_title="Time stamp",
+    	yaxis_title="Symbol",
+        legend=dict(
+        	title=dict(text="Symbol")
+    	)
     )
     return fig
 
@@ -197,8 +205,13 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
     fig.update_layout(
         xaxis_type="linear",
         height=min(2000, (dims[1] - dims[0]) * 50),
-        title_text="Time Series",
         showlegend=False,
+        xaxis_title="Time stamp",
+    	yaxis_title="Dimension",
+        title_text=(
+            "Plot of your chosen multivariate time series<br> along with its"
+            "univariate d_symb symbolic sequence (on top)"
+		),
     )
     st.plotly_chart(fig, use_container_width=True)
     del fig, fig_symb
@@ -207,28 +220,28 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
 
 def get_data_step():
     uploaded_ts = st.file_uploader(
-        "Upload your time series", accept_multiple_files=True
+        "Upload your time series:", accept_multiple_files=True
     )
-    if len(uploaded_ts) == 1:
-        st.markdown("Multiple time series should be provided")
-    elif len(uploaded_ts) >= 2:
+    # if len(uploaded_ts) == 1:
+    #     st.markdown("Multiple time series should be provided.")
+    if len(uploaded_ts) >= 1: # before: 2
         try:
             st.session_state.ALL_TS = preprocess_data(uploaded_ts)
         except Exception as e:
             st.error(
-                "An error occured while processing the files. Please Check if the time series have the correct format (n_timestamps,n_dims). The Exception is the following: {}",
+                "An error occured while processing the files. Please check if the time series have the correct format (n_timestamps, n_dims). The exception is the following: {}",
                 icon="🚨",
             )
 
 
 def Visualize_step():
     if len(st.session_state.ALL_TS) > 1:
-        N_symbol = st.slider("Number of symbols", 0, 25, 5)
-        D1, df_temp, lookup_table = dsym(st.session_state.ALL_TS, N_symbol)
-        tab_indiv, tab_all = st.tabs(["Each time series", "Dataset"])
+        n_symbols = st.slider("Choose the number of symbols:", 0, 25, 5)
+        D1, df_temp, lookup_table = dsym(st.session_state.ALL_TS, n_symbols)
+        tab_indiv, tab_all = st.tabs(["Single time series", "Data set of time series"])
         with tab_indiv:
             time_series_selected = st.selectbox(
-                "Pick a time series", list(range(len(st.session_state.ALL_TS)))
+                "Choose the index of a single time series :", list(range(len(st.session_state.ALL_TS)))
             )
             range_dims = [
                 [20 * dim_s, 20 * (dim_s + 1)]
@@ -248,7 +261,7 @@ def Visualize_step():
             range_dims += [
                 [0, len(st.session_state.ALL_TS[time_series_selected][0])]
             ]
-            dims = st.selectbox("choose dimensions range", range_dims)
+            dims = st.selectbox("Choose the dimensions' range:", range_dims)
             plot_time_series(
                 st.session_state.ALL_TS[time_series_selected],
                 df_temp.loc[df_temp["signal_index"] == time_series_selected],
@@ -258,20 +271,20 @@ def Visualize_step():
         with tab_all:
             mode = st.radio(
                 "Mode",
-                ["Colorbar list", "Similarity Matrix"],
+                ["Colorbars' list", "Distance matrix"],
                 captions=[
-                    "Visualize all symbolized time series",
-                    "Visualize the similarity matrix based on dsymb",
+                    "Visualize all the symbolized time series.",
+                    "Visualize the distance matrix based on d_symb.",
                 ],
                 horizontal=True,
             )
-            if mode == "Colorbar list":
+            if mode == "Colorbars' list":
                 mode_length = st.radio(
                     "Length",
-                    ["Real", "Normalized"],
+                    ["True", "Normalized"],
                     captions=[
-                        "Real time series length",
-                        "normalized between 0 and 1",
+                        "Use the true time series' lengths.",
+                        "Normalize the lengths between 0 and 1.",
                     ],
                     horizontal=True,
                 )
@@ -280,15 +293,17 @@ def Visualize_step():
                 st.plotly_chart(fig, use_container_width=True)
                 fig_dist = plot_symbol_distr(df_temp, mode=mode_length)
                 st.plotly_chart(fig_dist, use_container_width=True)
-            elif mode == "Similarity Matrix":
-                fig = plot_matrix(D1)
+            elif mode == "Distance matrix":
+                fig = plot_matrix(D1, distance_name="d_symb")
                 st.plotly_chart(fig, use_container_width=True)
 
 
 def run_explore_frame():
-    st.markdown("## Explore Your dataset")
+    st.markdown("## Explore your data set.")
     st.markdown(
-        "Select the number of symbols to represent your time series. You can then drop your dataset (each time series in one .csv file with the shape (n_timestamp,n_dim)."
+        "Upload your data set of (multivariate) time series, each time series must be in a `.csv`"
+        " file with the shape `(n_timestamps, n_dim)`."
+        " Then, select the number of symbols to represent your time series."
     )
 
     get_data_step()
@@ -302,7 +317,7 @@ def run_compare_frame():
     st.markdown(compare_text_1)
 
     tab_data_desc, tab_basesline_desc = st.tabs(
-        ["Dataset Description", "Baselines Description"]
+        ["Data set description", "Baselines description"]
     )
 
     with tab_data_desc:
@@ -315,29 +330,74 @@ def run_compare_frame():
 
     df_exectime = pd.read_csv("data/eval/exectime.csv", index_col=0)
     df_acc = pd.read_csv("data/eval/accuracy.csv", index_col=0)
+    d_replace_eval = {
+        "rand_score":"Rand score",
+        "Adjusted_rand_score":"Ajusted rand score",
+        "Adjusted_Mutual_Information":"Adjusted mutual information",
+        "Normalized_Multual_Information":"Normalized mutual information",
+        "homogeneity":"Homogeneity",
+        "Completeness":"Completeness",
+        "V_measure":"V-measure",
+        "Fowlkes_Mallows":"Fowlkes-Mallows index",
+    }
+    d_replace_distance = {
+		"dtw_dep":"DTW dependent",
+        "ddtw_dep":"DDTW dependent",
+        "wdtw_dep":"WDTW dependent",
+        "wddtw_dep":"WDDTW dependent",
+        "msm":"MSM",
+        "twe":"TWE",
+        "lcss":"LCSS",
+        "erp":"ERP",
+        "edr":"EDR",
+        "dsymb":"d_symb",
+	}
+    d_replace_distance_inv = dict()
+    for key, value in d_replace_distance.items():
+        d_replace_distance_inv[value] = key
+    list_distances = [d_replace_distance[dist_abb] for dist_abb in df_acc.columns]
 
     # measure = st.selectbox('choose Evaluation Measures', list(df_acc.index))
-    distance = st.selectbox("choose Evaluation Measures", list(df_acc.columns))
+    dist_name = st.selectbox("Choose a distance measure:", list_distances)
+    dist_abb = d_replace_distance_inv[dist_name]
 
     fig_mat = plot_matrix(
         pd.read_csv(
-            "data/simMatrix/{}_DistanceMatrix.csv".format(distance), index_col=0
-        ).to_numpy()
+            "data/simMatrix/{}_DistanceMatrix.csv".format(dist_abb), index_col=0
+        ).to_numpy(),
+        distance_name=dist_name
     )
 
     st.plotly_chart(fig_mat, use_container_width=True)
 
-    st.markdown("### Clustering Performances")
-
+    st.markdown("#### Explore the clustering performances.")
+	
     fig_time = px.bar(
-        df_exectime, title="Clustering execution time (in seconds)"
+        df_exectime.T.rename(columns=d_replace_distance).T,
+        labels={"distance":"distance measure", "value":"execution time"},
     )
     fig_time.update_yaxes(
         type="log",
     )
+    fig_time.update_layout(
+    	xaxis_title="Distance measure",
+        yaxis_title="Clustering execution time (in seconds)",
+        showlegend=False,
+	)
     st.plotly_chart(fig_time, use_container_width=True)
 
-    fig_acc = px.bar(df_acc.T, barmode="group", title="Clustering accuracy")
+	
+    fig_acc = px.bar(
+        df_acc.rename(columns=d_replace_distance).T.rename(columns=d_replace_eval),
+        barmode="group",
+    )
+    fig_acc.update_layout(
+		xaxis_title="Distance measure",
+        yaxis_title="Clustering performance evaluation",
+        legend=dict(
+        	title=dict(text="Evaluation metric")
+    	)
+	)
     st.plotly_chart(fig_acc, use_container_width=True)
 
 

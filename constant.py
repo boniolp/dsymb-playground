@@ -50,26 +50,28 @@ can be found in the [aeon](https://www.aeon-toolkit.org/en/latest/api_reference/
 
 compare_text_1 = f"""
 
-## Compare with other distance
+## Compare d_symb with other distance measures.
 
 We now illustrate the relevance of d_symb on a real-world
-use case. In this use case, we use distance measures on the [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) 
-to identify surgeons' gestures based on kinematic
-time series when using robotic arms and grippers to perform surgical tasks.
+use case. In this use case, we use several distance measures on the
+[JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) 
+in order to identify surgeons' gestures based on kinematic
+time series, which are generated when using robotic arms and grippers to perform these surgical tasks.
+All results are pre-computed (in order to save you some computing time).
 
 
 """
 
 compare_text_2 = f"""
 
-### Explore the results
+### Explore the distance measures' results.
 
 In this dataset, we consider two surgical gestures: ***Knot Tying*** (39 multivariate time series) 
-and ***Needle Passing*** (40 multivariate time series). The objective is to use different distance measures
+and ***Needle Passing*** (40 multivariate time series). The objective is to use several distance measures
 to cluster (using an agglomerative clustering approach with complete linkage) and identify these two gestures.
-In the following section,
-the similarity matrices corresponding to several distance measures, as well as the clustering performances 
-(using 8 evaluation measures) and the execution time (in seconds) can be visualized.
+In the following, we display
+the distance matrices corresponding to several distance measures, as well as the clustering performances 
+(using 8 evaluation measures) and the execution time (in seconds).
 
 
 """
