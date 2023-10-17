@@ -27,13 +27,15 @@ from weighted_levenshtein import lev
 
 import streamlit as st
 
+
 def compute_weighted_lev(
     n_symbols,
     symb_signal_1,
     symb_signal_2,
     insert_costs,
     delete_costs,
-    substitute_costs,):
+    substitute_costs,
+):
     """Compute the general edit distance (a.k.a weighted Levenshtein
     distance) between two symbolic signals.
 
@@ -61,12 +63,14 @@ def compute_weighted_lev(
     )
     return symb_signals_dist
 
+
 def get_feat_df(segment_features_df: pd.DataFrame) -> pd.DataFrame:
     """Return the same df with only the feature columns."""
     feat_columns = [
         col for col in segment_features_df.columns if col.endswith("_feat")
     ]
     return segment_features_df[feat_columns]
+
 
 def transform_costs(lookup_table):
     """Transform the substitute, insertion and deletion costs.
@@ -81,7 +85,7 @@ def transform_costs(lookup_table):
     substitute_costs = np.ones((128, 128), dtype=np.float64)
     n_symbols = lookup_table.shape[0]
     substitute_costs[
-        ord("A"): ord("A") + n_symbols, ord("A"): ord("A") + n_symbols
+        ord("A") : ord("A") + n_symbols, ord("A") : ord("A") + n_symbols
     ] = lookup_table.astype(np.float64)
 
     # Scale up the insert and delete costs:
@@ -97,70 +101,101 @@ def transform_costs(lookup_table):
     return b_transform_costs
 
 
-
-def compute_symbolisation(df_temp,Nsig):
-    l_min=np.min(df_temp["segment_length"])
-    symboli=[]
-    for i in range(Nsig):
-        k=np.where(df_temp["signal_index"]==i)
-        k=k[0]
-        sym_x=[]
+def compute_symbolisation(df_temp, n_signals):
+    l_min = np.min(df_temp["segment_length"])
+    symboli = []
+    for i in range(n_signals):
+        k = np.where(df_temp["signal_index"] == i)
+        k = k[0]
+        sym_x = []
         for j in range(len(k)):
-            new_l=df_temp["segment_length"][k[j]]/l_min
-            new_sym=[df_temp['segment_symbol'][k[j]]] * new_l.astype(int)
-            sym_x=sym_x+new_sym
+            new_l = df_temp["segment_length"][k[j]] / l_min
+            new_sym = [df_temp["segment_symbol"][k[j]]] * new_l.astype(int)
+            sym_x = sym_x + new_sym
         symboli.append(sym_x)
     return symboli
 
-def compute_matrix_distance(symboli,lookup_table,Nsig,n_clusters):
-    b_transform_costs=transform_costs(lookup_table)
-    D=np.zeros((Nsig,Nsig))
-    for i in range(Nsig):
-        for j in range(i,Nsig):
-            D[i,j]=compute_weighted_lev(n_clusters,symboli[i],symboli[j],b_transform_costs.insert_costs,b_transform_costs.delete_costs,b_transform_costs.substitute_costs)
-            D[j,i]=D[i,j]
+
+def compute_matrix_distance(symboli, lookup_table, n_signals, n_clusters):
+    b_transform_costs = transform_costs(lookup_table)
+    D = np.zeros((n_signals, n_signals))
+    for i in range(n_signals):
+        for j in range(i, n_signals):
+            D[i, j] = compute_weighted_lev(
+                n_clusters,
+                symboli[i],
+                symboli[j],
+                b_transform_costs.insert_costs,
+                b_transform_costs.delete_costs,
+                b_transform_costs.substitute_costs,
+            )
+            D[j, i] = D[i, j]
     return D
 
 
-
-def my_clustering(n_clusters,X):
-    kmeans = KMeans(n_clusters=n_clusters,n_init=10).fit(X)
-    lookup_table=np.zeros((n_clusters,n_clusters))
+def my_clustering(n_clusters, X):
+    kmeans = KMeans(n_clusters=n_clusters, n_init=10).fit(X)
+    lookup_table = np.zeros((n_clusters, n_clusters))
     for i in range(n_clusters):
         for j in range(n_clusters):
-            lookup_table[i,j]=np.sqrt(np.sum(np.abs(kmeans.cluster_centers_[i,:]-kmeans.cluster_centers_[j,:])**2))
-    return kmeans.labels_,lookup_table,kmeans.cluster_centers_
+            lookup_table[i, j] = np.sqrt(
+                np.sum(
+                    np.abs(
+                        kmeans.cluster_centers_[i, :]
+                        - kmeans.cluster_centers_[j, :]
+                    )
+                    ** 2
+                )
+            )
+    return kmeans.labels_, lookup_table, kmeans.cluster_centers_
 
 
-
-def reconstruct_signal(id_signal,X,df_temp):
-    k=np.where(df_temp["signal_index"]==id_signal)
-    k=k[0]
-    x_recons=np.tile(X[k[0],:],(df_temp["segment_length"][k[0]],1))
-    for i in range(1,len(k)):
-        x_recons=np.concatenate((x_recons,np.tile(X[k[i],:],(df_temp["segment_length"][k[i]],1))))
+def reconstruct_signal(id_signal, X, df_temp):
+    k = np.where(df_temp["signal_index"] == id_signal)
+    k = k[0]
+    x_recons = np.tile(X[k[0], :], (df_temp["segment_length"][k[0]], 1))
+    for i in range(1, len(k)):
+        x_recons = np.concatenate(
+            (
+                x_recons,
+                np.tile(X[k[i], :], (df_temp["segment_length"][k[i]], 1)),
+            )
+        )
     return x_recons
 
-def reconstruct_signal_quant(id_signal,df_temp,centroids):
-    k=np.where(df_temp["signal_index"]==id_signal)
-    k=k[0]
-    x_recons=np.tile(centroids[df_temp["segment_symbol"][k[0]],:],(df_temp["segment_length"][k[0]],1))
-    for i in range(1,len(k)):
-        x_recons=np.concatenate((x_recons,np.tile(centroids[df_temp["segment_symbol"][k[i]],:],(df_temp["segment_length"][k[i]],1))))
+
+def reconstruct_signal_quant(id_signal, df_temp, centroids):
+    k = np.where(df_temp["signal_index"] == id_signal)
+    k = k[0]
+    x_recons = np.tile(
+        centroids[df_temp["segment_symbol"][k[0]], :],
+        (df_temp["segment_length"][k[0]], 1),
+    )
+    for i in range(1, len(k)):
+        x_recons = np.concatenate(
+            (
+                x_recons,
+                np.tile(
+                    centroids[df_temp["segment_symbol"][k[i]], :],
+                    (df_temp["segment_length"][k[i]], 1),
+                ),
+            )
+        )
     return x_recons
 
 
-def get_multiscale_seg(X,n_clusters):
-    labels,lookup_table,centroids=my_clustering(n_clusters,X)
-    lookup_table = lookup_table/np.max(lookup_table)
+def get_multiscale_seg(X, n_clusters):
+    labels, lookup_table, centroids = my_clustering(n_clusters, X)
+    lookup_table = lookup_table / np.max(lookup_table)
 
-    return labels,lookup_table
+    return labels, lookup_table
 
-@st.cache_data(ttl=3600,max_entries=1,show_spinner=False)
-def dsym(list_of_multivariate_signals,N_symbol):
-    with st.spinner('Computing dsymb...'):
-        pen_factor=1000000
-        Nsig=len(list_of_multivariate_signals)
+
+@st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
+def dsym(list_of_multivariate_signals, n_symbols):
+    with st.spinner("Computing dsymb..."):
+        pen_factor = 1_000_000
+        n_signals = len(list_of_multivariate_signals)
 
         # Define the segmentation
         seg = Segmentation(
@@ -169,40 +204,47 @@ def dsym(list_of_multivariate_signals,N_symbol):
             n_segments=None,
             pen_factor=pen_factor,
         )
-      
-        echelle=np.zeros((Nsig,))
-        for i in range(Nsig):
-            echelle[i]=np.mean(np.var(list_of_multivariate_signals[i],axis=0))
-        
-        nb_rupt=np.zeros((Nsig,))
-        big_list_of_multivariate_signals=[]
-        big_list_of_bkps=[]
-        for sig in range(Nsig):
-            x=list_of_multivariate_signals[sig]
+
+        echelle = np.zeros((n_signals,))
+        for i in range(n_signals):
+            echelle[i] = np.mean(
+                np.var(list_of_multivariate_signals[i], axis=0)
+            )
+
+        nb_rupt = np.zeros((n_signals,))
+        big_list_of_multivariate_signals = []
+        big_list_of_bkps = []
+        for sig in range(n_signals):
+            x = list_of_multivariate_signals[sig]
             big_list_of_multivariate_signals.append(x)
-            n1,n2=np.shape(x)
-            pen=n1*echelle[sig]
-            algo = rpt.KernelCPD(kernel="linear", jump=1).fit(list_of_multivariate_signals[sig])
+            n1, n2 = np.shape(x)
+            pen = n1 * echelle[sig]
+            algo = rpt.KernelCPD(kernel="linear", jump=1).fit(
+                list_of_multivariate_signals[sig]
+            )
             result = algo.predict(pen=pen)
             big_list_of_bkps.append(result)
-            nb_rupt[sig]=len(result)
+            nb_rupt[sig] = len(result)
 
-        b_segmentation=Bunch(list_of_multivariate_signals=big_list_of_multivariate_signals,list_of_bkps=big_list_of_bkps)
+        b_segmentation = Bunch(
+            list_of_multivariate_signals=big_list_of_multivariate_signals,
+            list_of_bkps=big_list_of_bkps,
+        )
         seg_feat = SegmentFeature(
             features_names=[
                 "mean",
             ]
         )
         df_temp = seg_feat.fit(b_segmentation).transform(b_segmentation)
-        X=df_temp.to_numpy()[:,:len(list_of_multivariate_signals[0][0])] 
+        X = df_temp.to_numpy()[:, : len(list_of_multivariate_signals[0][0])]
 
-        labels,lookup_table = get_multiscale_seg(X,N_symbol)
-        df_temp["segment_symbol"]=labels
+        labels, lookup_table = get_multiscale_seg(X, n_symbols)
+        df_temp["segment_symbol"] = labels
 
-        symboli=compute_symbolisation(df_temp,Nsig)
-        D1=compute_matrix_distance(symboli,lookup_table,Nsig,len(lookup_table))
+        symboli = compute_symbolisation(df_temp, n_signals)
+        D1 = compute_matrix_distance(
+            symboli, lookup_table, n_signals, len(lookup_table)
+        )
 
     gc.collect()
-    return D1,df_temp,lookup_table
-
-
+    return D1, df_temp, lookup_table

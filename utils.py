@@ -29,212 +29,317 @@ from streamlit_plotly_events import plotly_events
 
 from dsymb import *
 
-r = lambda: random.randint(50,255)
-DEFAULT_PLOTLY_COLORS={str(i):'#%02X%02X%02X' % (r(),r(),r()) for i in range(25)}
+r = lambda: random.randint(50, 255)
+DEFAULT_PLOTLY_COLORS = {
+    str(i): "#%02X%02X%02X" % (r(), r(), r()) for i in range(25)
+}
 
 
-
-@st.cache_data(ttl=3600,max_entries=1,show_spinner=False)
+@st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def preprocess_data(uploaded_ts):
-	with st.spinner('Preprocessing data...'):
-		all_ts = []
-		for ts in uploaded_ts:
-			all_ts.append(np.genfromtxt(ts, delimiter=','))	
-	return all_ts
-	gc.collect()
+    with st.spinner("Preprocessing data..."):
+        all_ts = []
+        for ts in uploaded_ts:
+            all_ts.append(np.genfromtxt(ts, delimiter=","))
+    return all_ts
+    gc.collect()
 
 
-@st.cache_data(ttl=3600,max_entries=1,show_spinner=False)
+@st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def plot_matrix(D1):
-	return px.imshow(D1,aspect="auto")
+    return px.imshow(D1, aspect="auto")
 
 
-@st.cache_data(ttl=3600,max_entries=3,show_spinner=False)
-def plot_symbolization(df_temp,mode):
-	tmp_df = df_temp
-	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
-	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
-	tmp_df['Task'] = tmp_df['Task'].apply(str)
+@st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
+def plot_symbolization(df_temp, mode):
+    tmp_df = df_temp
+    tmp_df = tmp_df.rename(
+        columns={
+            "segment_start": "Start",
+            "segment_end": "Finish",
+            "signal_index": "Task",
+        }
+    )
+    tmp_df["segment_symbol"] = tmp_df["segment_symbol"].apply(str)
+    tmp_df["Task"] = tmp_df["Task"].apply(str)
 
-	if mode == 'Normalized':
-		all_max_length = []
-		for i in range(len(tmp_df)):
-			sig_index = tmp_df['Task'].values[i]
-			max_length = max(tmp_df.loc[tmp_df['Task'] == sig_index]['Finish'].values)
-			all_max_length.append(max_length)
-		tmp_df['max'] = all_max_length
-		tmp_df['Start'] = tmp_df['Start'] / tmp_df['max']
-		tmp_df['Finish'] = tmp_df['Finish'] / tmp_df['max']
+    if mode == "Normalized":
+        all_max_length = []
+        for i in range(len(tmp_df)):
+            sig_index = tmp_df["Task"].values[i]
+            max_length = max(
+                tmp_df.loc[tmp_df["Task"] == sig_index]["Finish"].values
+            )
+            all_max_length.append(max_length)
+        tmp_df["max"] = all_max_length
+        tmp_df["Start"] = tmp_df["Start"] / tmp_df["max"]
+        tmp_df["Finish"] = tmp_df["Finish"] / tmp_df["max"]
 
-	fig = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True,colors= {key:DEFAULT_PLOTLY_COLORS[key] for key in set(tmp_df['segment_symbol'].values)})
-	fig.update_layout(xaxis_type='linear', height=1000,title_text="All symbolized Time Series")
-	return fig
-
-@st.cache_data(ttl=3600,max_entries=3,show_spinner=False)
-def plot_symbol_distr(df_temp,mode):
-	tmp_df = df_temp
-	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
-	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
-	tmp_df['Task'] = tmp_df['Task'].apply(str)
-	
-	all_max_length = []
-	for i in range(len(tmp_df)):
-		sig_index = tmp_df['Task'].values[i]
-		max_length = max(tmp_df.loc[tmp_df['Task'] == sig_index]['Finish'].values)
-		all_max_length.append(max_length)
-
-	bin_size = 0.01*max(all_max_length)
-
-	if mode == 'Normalized':
-		bin_size = 0.01
-		tmp_df['max'] = all_max_length
-		tmp_df['Start'] = tmp_df['Start'] / tmp_df['max']
-		tmp_df['Finish'] = tmp_df['Finish'] / tmp_df['max']
-
-	n_symbol = len(set(tmp_df['segment_symbol'].values))
-
-	fig = make_subplots(rows=len(list(set(tmp_df['segment_symbol'].values))), cols=1,shared_xaxes=True)
-
-	for i,symbol in enumerate(set(tmp_df['segment_symbol'].values)):
-		pos_symb = 0.5*np.array(tmp_df.loc[tmp_df['segment_symbol'] == symbol]['Finish'].values + tmp_df.loc[tmp_df['segment_symbol'] == symbol]['Start'].values)
-		fig_symb = ff.create_distplot([pos_symb],group_labels=['symbol {}'.format(symbol)],show_hist=True,colors=[DEFAULT_PLOTLY_COLORS[symbol]],bin_size=bin_size,show_curve=False,show_rug=False)
-		for trace in fig_symb.data:
-			fig.add_trace(trace, row=1+i, col=1)
-	fig.update_layout(xaxis_type='linear', height=min(1000,100*n_symbol),title_text="Symbol distribution over time")
-	return fig
-	
+    fig = ff.create_gantt(
+        tmp_df,
+        index_col="segment_symbol",
+        bar_width=0.4,
+        show_colorbar=True,
+        group_tasks=True,
+        colors={
+            key: DEFAULT_PLOTLY_COLORS[key]
+            for key in set(tmp_df["segment_symbol"].values)
+        },
+    )
+    fig.update_layout(
+        xaxis_type="linear",
+        height=1000,
+        title_text="All symbolized time series",
+    )
+    return fig
 
 
-	
+@st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
+def plot_symbol_distr(df_temp, mode):
+    tmp_df = df_temp
+    tmp_df = tmp_df.rename(
+        columns={
+            "segment_start": "Start",
+            "segment_end": "Finish",
+            "signal_index": "Task",
+        }
+    )
+    tmp_df["segment_symbol"] = tmp_df["segment_symbol"].apply(str)
+    tmp_df["Task"] = tmp_df["Task"].apply(str)
 
-def plot_time_series(ts,tmp_df,dims=[0,20]):
-	
-	#tmp_df = df_temp.copy()
-	tmp_df = tmp_df.rename(columns={'segment_start': 'Start', 'segment_end': 'Finish', 'signal_index': 'Task'})
-	tmp_df['segment_symbol'] = tmp_df['segment_symbol'].apply(str)
-	tmp_df['Task'] = tmp_df['Task'].apply(str)
-	fig_symb = ff.create_gantt(tmp_df, index_col = 'segment_symbol',  bar_width = 0.4, show_colorbar=True,group_tasks=True,colors={key:DEFAULT_PLOTLY_COLORS[key] for key in set(tmp_df['segment_symbol'].values)})
-	
-	fig = make_subplots(rows=(dims[1]-dims[0])+1, cols=1,shared_xaxes=True)
+    all_max_length = []
+    for i in range(len(tmp_df)):
+        sig_index = tmp_df["Task"].values[i]
+        max_length = max(
+            tmp_df.loc[tmp_df["Task"] == sig_index]["Finish"].values
+        )
+        all_max_length.append(max_length)
 
-	for trace in fig_symb.data:
-    		fig.add_trace(trace, row=1, col=1)
-	
-	for i_row,i in enumerate(range(dims[0],dims[1])):
-		fig.add_trace(
-			go.Scattergl(x=list(range(len(ts))), y=ts[:,i],mode = 'lines', line = dict(color = 'white', width=1)),
-			row=i_row+2, col=1
-		)
-	fig.update_layout(xaxis_type='linear',height=min(2000,(dims[1]-dims[0])*50), title_text="Time Series",showlegend=False)
-	st.plotly_chart(fig, use_container_width=True)
-	del fig,fig_symb 
-	gc.collect()
+    bin_size = 0.01 * max(all_max_length)
+
+    if mode == "Normalized":
+        bin_size = 0.01
+        tmp_df["max"] = all_max_length
+        tmp_df["Start"] = tmp_df["Start"] / tmp_df["max"]
+        tmp_df["Finish"] = tmp_df["Finish"] / tmp_df["max"]
+
+    n_symbols = len(set(tmp_df["segment_symbol"].values))
+
+    fig = make_subplots(
+        rows=len(list(set(tmp_df["segment_symbol"].values))),
+        cols=1,
+        shared_xaxes=True,
+    )
+
+    for i, symbol in enumerate(set(tmp_df["segment_symbol"].values)):
+        pos_symb = 0.5 * np.array(
+            tmp_df.loc[tmp_df["segment_symbol"] == symbol]["Finish"].values
+            + tmp_df.loc[tmp_df["segment_symbol"] == symbol]["Start"].values
+        )
+        fig_symb = ff.create_distplot(
+            [pos_symb],
+            group_labels=["symbol {}".format(symbol)],
+            show_hist=True,
+            colors=[DEFAULT_PLOTLY_COLORS[symbol]],
+            bin_size=bin_size,
+            show_curve=False,
+            show_rug=False,
+        )
+        for trace in fig_symb.data:
+            fig.add_trace(trace, row=1 + i, col=1)
+    fig.update_layout(
+        xaxis_type="linear",
+        height=min(1000, 100 * n_symbols),
+        title_text="Symbol distribution over time",
+    )
+    return fig
+
+
+def plot_time_series(ts, tmp_df, dims=[0, 20]):
+    # tmp_df = df_temp.copy()
+    tmp_df = tmp_df.rename(
+        columns={
+            "segment_start": "Start",
+            "segment_end": "Finish",
+            "signal_index": "Task",
+        }
+    )
+    tmp_df["segment_symbol"] = tmp_df["segment_symbol"].apply(str)
+    tmp_df["Task"] = tmp_df["Task"].apply(str)
+    fig_symb = ff.create_gantt(
+        tmp_df,
+        index_col="segment_symbol",
+        bar_width=0.4,
+        show_colorbar=True,
+        group_tasks=True,
+        colors={
+            key: DEFAULT_PLOTLY_COLORS[key]
+            for key in set(tmp_df["segment_symbol"].values)
+        },
+    )
+
+    fig = make_subplots(rows=(dims[1] - dims[0]) + 1, cols=1, shared_xaxes=True)
+
+    for trace in fig_symb.data:
+        fig.add_trace(trace, row=1, col=1)
+
+    for i_row, i in enumerate(range(dims[0], dims[1])):
+        fig.add_trace(
+            go.Scattergl(
+                x=list(range(len(ts))),
+                y=ts[:, i],
+                mode="lines",
+                line=dict(color="white", width=1),
+            ),
+            row=i_row + 2,
+            col=1,
+        )
+    fig.update_layout(
+        xaxis_type="linear",
+        height=min(2000, (dims[1] - dims[0]) * 50),
+        title_text="Time Series",
+        showlegend=False,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    del fig, fig_symb
+    gc.collect()
 
 
 def get_data_step():
-	uploaded_ts = st.file_uploader("Upload your time series",accept_multiple_files=True)
-	if len(uploaded_ts) == 1:
-		st.markdown("Multiple time series should be provided")
-	elif len(uploaded_ts) >= 2:
-		try:
-			st.session_state.ALL_TS = preprocess_data(uploaded_ts)
-		except Exception as e:
-			st.error('An error occured while processing the files. Please Check if the time series have the correct format (n_timestamps,n_dims). The Exception is the following: {}', icon="🚨")
-    
+    uploaded_ts = st.file_uploader(
+        "Upload your time series", accept_multiple_files=True
+    )
+    if len(uploaded_ts) == 1:
+        st.markdown("Multiple time series should be provided")
+    elif len(uploaded_ts) >= 2:
+        try:
+            st.session_state.ALL_TS = preprocess_data(uploaded_ts)
+        except Exception as e:
+            st.error(
+                "An error occured while processing the files. Please Check if the time series have the correct format (n_timestamps,n_dims). The Exception is the following: {}",
+                icon="🚨",
+            )
+
 
 def Visualize_step():
-	if len(st.session_state.ALL_TS) > 1:
-		N_symbol = st.slider('Number of symbols', 0, 25, 5)
-		D1,df_temp,lookup_table = dsym(st.session_state.ALL_TS,N_symbol)
-		tab_indiv, tab_all = st.tabs(["Each time series", "Dataset"])  
-		with tab_indiv:
-			time_series_selected = st.selectbox('Pick a time series', list(range(len(st.session_state.ALL_TS))))
-			range_dims = [[20*dim_s,20*(dim_s+1)] for dim_s in range(len(st.session_state.ALL_TS[time_series_selected][0])//20)]
-			if range_dims[-1][1] < len(st.session_state.ALL_TS[time_series_selected][0]):
-				range_dims += [[range_dims[-1][1],len(st.session_state.ALL_TS[time_series_selected][0])]]
-			range_dims += [[0,len(st.session_state.ALL_TS[time_series_selected][0])]]
-			dims = st.selectbox('choose dimensions range', range_dims)
-			plot_time_series(st.session_state.ALL_TS[time_series_selected],df_temp.loc[df_temp['signal_index']==time_series_selected],dims)
-			
-		with tab_all:
-			mode = st.radio(
-				"Mode",
-				["Colorbar list", "Similarity Matrix"],
-				captions = ["Visualize all symbolized time series", "Visualize the similarity matrix based on dsymb"],horizontal=True)
-			if mode == "Colorbar list":
-				mode_length = st.radio(
-					"Length",
-					["Real", "Normalized"],
-					captions = ["Real time series length", "normalized between 0 and 1"],horizontal=True)
-				
-				fig = plot_symbolization(df_temp,mode=mode_length)
-				st.plotly_chart(fig, use_container_width=True)
-				fig_dist = plot_symbol_distr(df_temp,mode=mode_length)
-				st.plotly_chart(fig_dist, use_container_width=True)
-			elif mode == "Similarity Matrix":
-				fig = plot_matrix(D1)
-				st.plotly_chart(fig, use_container_width=True)
-				
+    if len(st.session_state.ALL_TS) > 1:
+        N_symbol = st.slider("Number of symbols", 0, 25, 5)
+        D1, df_temp, lookup_table = dsym(st.session_state.ALL_TS, N_symbol)
+        tab_indiv, tab_all = st.tabs(["Each time series", "Dataset"])
+        with tab_indiv:
+            time_series_selected = st.selectbox(
+                "Pick a time series", list(range(len(st.session_state.ALL_TS)))
+            )
+            range_dims = [
+                [20 * dim_s, 20 * (dim_s + 1)]
+                for dim_s in range(
+                    len(st.session_state.ALL_TS[time_series_selected][0]) // 20
+                )
+            ]
+            if range_dims[-1][1] < len(
+                st.session_state.ALL_TS[time_series_selected][0]
+            ):
+                range_dims += [
+                    [
+                        range_dims[-1][1],
+                        len(st.session_state.ALL_TS[time_series_selected][0]),
+                    ]
+                ]
+            range_dims += [
+                [0, len(st.session_state.ALL_TS[time_series_selected][0])]
+            ]
+            dims = st.selectbox("choose dimensions range", range_dims)
+            plot_time_series(
+                st.session_state.ALL_TS[time_series_selected],
+                df_temp.loc[df_temp["signal_index"] == time_series_selected],
+                dims,
+            )
 
+        with tab_all:
+            mode = st.radio(
+                "Mode",
+                ["Colorbar list", "Similarity Matrix"],
+                captions=[
+                    "Visualize all symbolized time series",
+                    "Visualize the similarity matrix based on dsymb",
+                ],
+                horizontal=True,
+            )
+            if mode == "Colorbar list":
+                mode_length = st.radio(
+                    "Length",
+                    ["Real", "Normalized"],
+                    captions=[
+                        "Real time series length",
+                        "normalized between 0 and 1",
+                    ],
+                    horizontal=True,
+                )
 
-
+                fig = plot_symbolization(df_temp, mode=mode_length)
+                st.plotly_chart(fig, use_container_width=True)
+                fig_dist = plot_symbol_distr(df_temp, mode=mode_length)
+                st.plotly_chart(fig_dist, use_container_width=True)
+            elif mode == "Similarity Matrix":
+                fig = plot_matrix(D1)
+                st.plotly_chart(fig, use_container_width=True)
 
 
 def run_explore_frame():
-	st.markdown('## Explore Your dataset')
-	st.markdown('Select the number of symbols to represent your time series. You can then drop your dataset (each time series in one .csv file with the shape (n_timestamp,n_dim).')
-	
+    st.markdown("## Explore Your dataset")
+    st.markdown(
+        "Select the number of symbols to represent your time series. You can then drop your dataset (each time series in one .csv file with the shape (n_timestamp,n_dim)."
+    )
 
-	
-	get_data_step()
+    get_data_step()
 
-	Visualize_step()
+    Visualize_step()
 
-	gc.collect()
-			
-		
+    gc.collect()
 
-            
-   
 
 def run_compare_frame():
+    st.markdown(compare_text_1)
 
+    tab_data_desc, tab_basesline_desc = st.tabs(
+        ["Dataset Description", "Baselines Description"]
+    )
 
-	st.markdown(compare_text_1)
+    with tab_data_desc:
+        st.markdown(data_JIGSAW)
 
-	tab_data_desc, tab_basesline_desc = st.tabs(["Dataset Description", "Baselines Description"])  
+    with tab_basesline_desc:
+        st.markdown(Baseline_desc)
 
-	with tab_data_desc:
-		st.markdown(data_JIGSAW)
+    st.markdown(compare_text_2)
 
-	with tab_basesline_desc:
-		st.markdown(Baseline_desc)		
+    df_exectime = pd.read_csv("data/eval/exectime.csv", index_col=0)
+    df_acc = pd.read_csv("data/eval/accuracy.csv", index_col=0)
 
-	st.markdown(compare_text_2)
+    # measure = st.selectbox('choose Evaluation Measures', list(df_acc.index))
+    distance = st.selectbox("choose Evaluation Measures", list(df_acc.columns))
 
+    fig_mat = plot_matrix(
+        pd.read_csv(
+            "data/simMatrix/{}_DistanceMatrix.csv".format(distance), index_col=0
+        ).to_numpy()
+    )
 
-	df_exectime = pd.read_csv('data/eval/exectime.csv',index_col=0)
-	df_acc = pd.read_csv('data/eval/accuracy.csv',index_col=0)
+    st.plotly_chart(fig_mat, use_container_width=True)
 
-	#measure = st.selectbox('choose Evaluation Measures', list(df_acc.index))
-	distance = st.selectbox('choose Evaluation Measures', list(df_acc.columns))
+    st.markdown("### Clustering Performances")
 
-	fig_mat = plot_matrix(pd.read_csv('data/simMatrix/{}_DistanceMatrix.csv'.format(distance),index_col=0).to_numpy())	
+    fig_time = px.bar(
+        df_exectime, title="Clustering execution time (in seconds)"
+    )
+    fig_time.update_yaxes(
+        type="log",
+    )
+    st.plotly_chart(fig_time, use_container_width=True)
 
-	st.plotly_chart(fig_mat, use_container_width=True)
-
-	st.markdown("### Clustering Performances")
-
-	fig_time = px.bar(
-		df_exectime,
-		title="Clustering execution time (in seconds)")
-	fig_time.update_yaxes(type="log",)
-	st.plotly_chart(fig_time, use_container_width=True)
-
-	fig_acc = px.bar(df_acc.T,barmode='group',title="Clustering accuracy")
-	st.plotly_chart(fig_acc, use_container_width=True)
-
+    fig_acc = px.bar(df_acc.T, barmode="group", title="Clustering accuracy")
+    st.plotly_chart(fig_acc, use_container_width=True)
 
 
 def run_about_frame():
-	st.markdown(about_text)
+    st.markdown(about_text)

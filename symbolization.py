@@ -259,8 +259,12 @@ class Symbolization(BaseEstimator):
                 f"`symb_quantif_method` should be None, not {symb_quantif_method}."
             )
             assert symb_quantif_method is None, err_msg
-            
-            if symb_cluster_method in ["kmeans", "kmeans_partial", "minibatch_kmeans"]:
+
+            if symb_cluster_method in [
+                "kmeans",
+                "kmeans_partial",
+                "minibatch_kmeans",
+            ]:
                 err_msg = (
                     "If the symbolization is done with K-means clustering, choose "
                     f"`eucl_cc` or `eucl_ccm`, not {lookup_table_type}."
@@ -562,22 +566,30 @@ class Symbolization(BaseEstimator):
                 verbose=0,
                 random_state=0,
             ).fit(scaled_features_df)
-        elif self.symb_cluster_method in ["spectral_kmeans", "spectral_discretize", "spectral_cluster_qr"]:
-            if self.symb_cluster_method=="spectral_kmeans":
+        elif self.symb_cluster_method in [
+            "spectral_kmeans",
+            "spectral_discretize",
+            "spectral_cluster_qr",
+        ]:
+            if self.symb_cluster_method == "spectral_kmeans":
                 assign_labels = "kmeans"
-            elif self.symb_cluster_method=="spectral_discretize":
+            elif self.symb_cluster_method == "spectral_discretize":
                 assign_labels = "discretize"
-            elif self.symb_cluster_method=="spectral_cluster_qr":
+            elif self.symb_cluster_method == "spectral_cluster_qr":
                 assign_labels = "cluster_qr"
             self.clustering_model_ = SpectralClustering(
                 n_clusters=self.n_symbols,
                 assign_labels=assign_labels,
-                random_state=0
+                random_state=0,
             ).fit(scaled_features_df)
 
         # Get the cluster centers (only if K-means variants), scaled or unscaled
         # NEW for SAX-DD-ML-v3
-        if self.symb_cluster_method in ["kmeans", "kmeans_partial", "minibatch_kmeans"]:
+        if self.symb_cluster_method in [
+            "kmeans",
+            "kmeans_partial",
+            "minibatch_kmeans",
+        ]:
             if self.features_scaling is not None:
                 # The scaling coefficient was only needed to obtain the clusters,
                 # but let's go back to cluster centers without the coeff
@@ -768,42 +780,43 @@ class Symbolization(BaseEstimator):
                 .apply(lambda df: df.segment_symbol.to_numpy())
                 .tolist()
             )
-        
+
         if self.lookup_table_type == "mof":
             "Mean per feature, in the multivariate case."
-            df_mof = (
-                self.get_feat_df(
-                    features_with_symbols_df
-                    .sort_values("segment_symbol")
-                    .groupby("segment_symbol")
-                    .mean()
-                )
+            df_mof = self.get_feat_df(
+                features_with_symbols_df.sort_values("segment_symbol")
+                .groupby("segment_symbol")
+                .mean()
             )
 
             # If a symbol is not used, consider its mean to be nan
             df_mof_full = df_mof.reset_index().copy()
             # Add a nan row if a symbol does not appear
             expected_unique_symbols = list(np.arange(self.n_symbols))
-            obtained_unique_symbols = sorted(df_mof_full.segment_symbol.unique().tolist())
+            obtained_unique_symbols = sorted(
+                df_mof_full.segment_symbol.unique().tolist()
+            )
             if len(expected_unique_symbols) != len(obtained_unique_symbols):
                 for symbol in expected_unique_symbols:
                     if symbol not in obtained_unique_symbols:
                         # Create a row with only nan values
-                        d_nan_row = {"segment_symbol":symbol}
+                        d_nan_row = {"segment_symbol": symbol}
                         for col in df_mof_full.columns.tolist():
-                            d_nan_row[col] = np.nan 
+                            d_nan_row[col] = np.nan
                         pd_nan_row = pd.Series(d_nan_row).to_frame().T
                         # Add the nan row
-                        df_mof_full = pd.concat([df_mof_full, pd_nan_row], ignore_index=True)
-            df_mof_full = (
-                df_mof_full
-                .sort_values(by="segment_symbol")
-                .set_index("segment_symbol")
-            )
+                        df_mof_full = pd.concat(
+                            [df_mof_full, pd_nan_row], ignore_index=True
+                        )
+            df_mof_full = df_mof_full.sort_values(
+                by="segment_symbol"
+            ).set_index("segment_symbol")
             # Compute the look-up table
             np_mof_full = df_mof_full.to_numpy()
             # If nan, than the distance between symbols is null
-            self.lookup_table_ = np.nan_to_num(squareform(pdist(X=np_mof_full, metric="euclidean")))
+            self.lookup_table_ = np.nan_to_num(
+                squareform(pdist(X=np_mof_full, metric="euclidean"))
+            )
 
         # Sanity check on the lookup table
         lookup_table_shape_obtained = self.lookup_table_.shape
@@ -812,7 +825,9 @@ class Symbolization(BaseEstimator):
             f"The look up table is of shape {lookup_table_shape_obtained}, "
             f"instead of expected {lookup_table_shape_expected}"
         )
-        assert lookup_table_shape_obtained==lookup_table_shape_expected, err_msg
+        assert (
+            lookup_table_shape_obtained == lookup_table_shape_expected
+        ), err_msg
 
         b_transform_symbolization = Bunch(
             list_of_symbolic_signals=list_of_symbolic_signals,
@@ -858,10 +873,16 @@ class Symbolization(BaseEstimator):
             )
 
         # Getting the cluster labels per segment
-        if self.symb_cluster_method not in ["spectral_kmeans", "spectral_discretize", "spectral_cluster_qr"]:
+        if self.symb_cluster_method not in [
+            "spectral_kmeans",
+            "spectral_discretize",
+            "spectral_cluster_qr",
+        ]:
             segment_symbols = self.clustering_model_.predict(scaled_features_df)
         else:
-            segment_symbols = self.clustering_model_.fit_predict(scaled_features_df)
+            segment_symbols = self.clustering_model_.fit_predict(
+                scaled_features_df
+            )
 
         return segment_symbols
 

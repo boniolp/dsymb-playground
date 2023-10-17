@@ -15,18 +15,23 @@
 import streamlit as st
 from utils import *
 
+
 def run():
     st.set_page_config(
-        page_title="dSymb",
+        page_title="d_symb",
     )
 
-    if 'ALL_TS' not in st.session_state:
-        st.session_state['ALL_TS'] = []
+    if "ALL_TS" not in st.session_state:
+        st.session_state["ALL_TS"] = []
 
     st.write("# Welcome to Symbol!")
-    st.markdown("Explore your time series dataset and through a meaningful symbolic representation.")
+    st.markdown(
+        "Explore your time series dataset and through a meaningful symbolic representation."
+    )
 
-    tab_explore, tab_compare, tab_about = st.tabs(["Explore", "Compare", "About"])  
+    tab_explore, tab_compare, tab_about = st.tabs(
+        ["Explore", "Compare", "About"]
+    )
 
     with tab_explore:
         run_explore_frame()
@@ -36,10 +41,6 @@ def run():
 
     with tab_about:
         run_about_frame()
-    
-    
-
-    
 
 
 if __name__ == "__main__":

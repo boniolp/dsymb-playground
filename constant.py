@@ -3,15 +3,15 @@ about_text = f"""
 Symbol is a Python-based web interactive tool to visualize, navigate, and explore 
 large multivariate time series datasets. It is based on a new symbolic representation, 
 **dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time 
-series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 
+series (with 80 dimensions and 5,000 timestamps) requires 20 seconds instead of 2,000 
 seconds for DTW-based analysis.
 
 ## Contributors
 
-* Paul Boniol (ENS Paris Saclay)
-* Sylvain Combettes (ENS Paris Saclay)
-* Charles Truong (ENS Paris Saclay)
-* Laurent Oudre (ENS Paris Saclay)
+* Paul Boniol (ENS Paris-Saclay)
+* Sylvain W. Combettes (ENS Paris-Saclay)
+* Charles Truong (ENS Paris-Saclay)
+* Laurent Oudre (ENS Paris-Saclay)
 """
 
 
@@ -27,13 +27,13 @@ for the rotation matrix, 6 variables for the linear and angular
 velocity of the manipulator, and 1 variable for the gripper angle.
 
 A preprocesssed version of the dataset can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX). 
-These time series can be uploaded in the Explore tab.
+These time series can be uploaded in the `Explore` tab.
 """
 
 Baseline_desc =f"""
-In this experiment, we compare ***dsymb*** with 9 distance measures. 
-These distances are specifically dedicated to time series. Thier implementation 
-can be found on the [AEON package](https://www.aeon-toolkit.org/en/latest/api_reference/distances.html).
+In this experiment, we compare ***d_symb*** with 9 distance measures. 
+These distances are specifically dedicated to time series. Their implementation 
+can be found in the [aeon](https://www.aeon-toolkit.org/en/latest/api_reference/distances.html) Python package.
 
 - [DTW](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.dtw_distance.html#aeon.distances.dtw_distance): Dynamic Time-Warping distance is the most widely used distance for time series. It compensates for misalignment issues by considering the best match for each pair of time series points.
 - [DDTW](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.ddtw_distance.html): Derivative DTW distance is similar to DTW distance, but consider the first order derivative of the original time series.
@@ -45,14 +45,14 @@ can be found on the [AEON package](https://www.aeon-toolkit.org/en/latest/api_re
 - [EDR](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.edr_distance.html#aeon.distances.edr_distance): Edit Distance on Real Sequences computes the minimum number of points that have to be deleted from the time series such that the sum of the distance between the remaining time series points is smaller than a predefined threshold.
 - [TWE](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.twe_distance.html#aeon.distances.twe_distance): Time Warp Edit distance is combining both DTW and Edit distance.
 
-- [dsymb](): TODO
+- [d_symb](): TODO
 """
 
 compare_text_1 = f"""
 
 ## Compare with other distance
 
-We now illustrate the interest of dsymb on a real-world
+We now illustrate the relevance of d_symb on a real-world
 use case. In this use case, we use distance measures on the [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) 
 to identify surgeons' gestures based on kinematic
 time series when using robotic arms and grippers to perform surgical tasks.

@@ -16,7 +16,7 @@
 <img width="500" src="./figures/demo_capture.gif"/>
 </p>
 
-Symbol is a Python-based web interactive tool to visualize, navigate, and explore large multivariate time series datasets. It is based on a new symbolic representation, **dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimensions and 5000 timestamps) requires 20 seconds instead of 2000 seconds for DTW-based analysis.
+Symbol is a Python-based web interactive tool to visualize, navigate, and explore large multivariate time series datasets. It is based on a new symbolic representation, $d_{symb}$, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimensions and 5,000 timestamps) requires 20 seconds instead of 2,000 seconds for DTW-based analysis.
 
 ### Reference
 
@@ -40,7 +40,7 @@ Symbol is a Python-based web interactive tool to visualize, navigate, and explor
 ## Contributors
 
 * Paul Boniol (ENS Paris Saclay)
-* Sylvain Combettes (ENS Paris Saclay)
+* Sylvain W. Combettes (ENS Paris Saclay)
 * Charles Truong (ENS Paris Saclay)
 * Laurent Oudre (ENS Paris Saclay)
 
@@ -71,7 +71,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-You can then open the app using your web browser. You can upload any kind of time series (one file per time series) with the shape (n_timestamps,n_dims).
+You can then open the app using your web browser. You can upload any kind of time series (one file per time series) with the shape `(n_timestamps, n_dims)`.
 A preprocessed version of the dataset [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX).
 
 
