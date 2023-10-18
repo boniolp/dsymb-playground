@@ -183,14 +183,14 @@ def plot_symbol_distr(df_temp, mode, n_symbols):
     )
     for i in range(0, len(list_of_actual_symbols_str_sorted)):
         fig.update_yaxes(
-			title_text="Occurence",
+			title_text="Occurrence",
 			row=i+1,
 			col=1
 		)
     fig.update_layout(
         xaxis_type="linear",
-        height=max(300, n_symbols * 150),
-        title_text="Symbols' occurence over time",
+        height=max(300, n_symbols * 120),
+        title_text="Symbols' occurrence over time",
         legend=dict(
         	title=dict(text="Symbol")
     	)
@@ -206,6 +206,54 @@ def plot_dendrogram(centroids):
         title="Dendrogram"
     )
 	return fig
+
+@st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
+def plot_symb_hist(df_temp, n_symbols):
+    if n_symbols<=10:
+        plotly_colors = px.colors.qualitative.G10
+    else:
+        plotly_colors = px.colors.qualitative.Alphabet
+    fig = px.histogram(
+		df_temp,
+		x="segment_symbol",
+        color="segment_symbol",
+        category_orders=dict(segment_symbol=list(np.arange(0, n_symbols))),
+        labels={"segment_symbol":"Symbol"},
+        color_discrete_sequence=plotly_colors,
+	)
+    fig.update_layout(
+        xaxis_title="Symbol",
+    	yaxis_title="Count",
+        title="Histogram",
+        bargap=0.2,
+        height=300,
+    )
+    fig.update_xaxes(type='category')
+    return fig
+
+@st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
+def plot_symb_len(df_temp, n_symbols):
+    if n_symbols<=10:
+        plotly_colors = px.colors.qualitative.G10
+    else:
+        plotly_colors = px.colors.qualitative.Alphabet
+    fig = px.histogram(
+        df_temp,
+        x="segment_length",
+        color="segment_symbol",
+        category_orders=dict(segment_symbol=list(np.arange(0, n_symbols))),
+        labels={"segment_symbol":"Symbol"},
+        color_discrete_sequence=plotly_colors
+    )
+    fig.update_layout(
+        xaxis_title="Segment length",
+    	yaxis_title="Count",
+        title="Histogram",
+        bargap=0.2,
+        height=400,
+    )
+    return fig
+
 
 def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
 	"""Plot the univariate symbolic sequence as well as the multivariate
@@ -241,6 +289,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
         tmp_df,
         index_col="segment_symbol",
         bar_width=0.4,
+        showgrid_x=True,
         show_colorbar=True,
         group_tasks=True,
         colors=dict_symbol_color,
@@ -373,14 +422,28 @@ def Visualize_step():
                     " multivariate time series."
 				)
                 st.plotly_chart(fig, use_container_width=True)
+                
+                st.markdown(
+                    "Why symbol occurs more out of the whole data set?"
+				)
+                fig_symb_hist = plot_symb_hist(df_temp=df_temp, n_symbols=n_symbols)
+                st.plotly_chart(fig_symb_hist, use_container_width=True)
+                
+                st.markdown(
+                    "Which symbols have the longest duration?"
+				)
+                fig_symb_len = plot_symb_len(df_temp=df_temp, n_symbols=n_symbols)
+                st.plotly_chart(fig_symb_len, use_container_width=True)
+                
                 fig_dist = plot_symbol_distr(df_temp, mode=mode_length, n_symbols=n_symbols)
                 st.markdown(
                     "Let us investigate around which time stamp each symbol"
                     " occurs most."
-                    " For each occurence of a symbol, the position taken is the"
+                    " For each occurrence of a symbol, the position taken is the"
                     " middle of each segment."
 				)
                 st.plotly_chart(fig_dist, use_container_width=True)
+                
                 fig_dendrogam = plot_dendrogram(centroids)
                 st.markdown(
                     "Let us explore the distance between the individual symbols"
