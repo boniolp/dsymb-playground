@@ -98,7 +98,7 @@ def plot_symbolization(df_temp, mode, n_symbols):
         height=max(350, n_signals * 15),
         xaxis_title="Time stamp",
     	yaxis_title="Symbolic sequence index",
-        title_text="Visualizing all symbolic sequences in the data set",
+        title_text="Color bars of all symbolic sequences in the data set",
         legend=dict(
         	title=dict(text="Symbol")
     	),
@@ -142,13 +142,17 @@ def plot_symbol_distr(df_temp, mode, n_symbols):
     else:
         plotly_colors = px.colors.qualitative.Alphabet
 
+    list_of_actual_symbols_str = tmp_df["segment_symbol"].unique().tolist()
+    list_of_actual_symbols_int = sorted([int(elem) for elem in list_of_actual_symbols_str])
+    list_of_actual_symbols_str_sorted = [str(elem) for elem in list_of_actual_symbols_int]
     fig = make_subplots(
-        rows=n_symbols,
+        rows=len(list_of_actual_symbols_str_sorted),
         cols=1,
         shared_xaxes=True,
+        subplot_titles=[f"Symbol {i}" for i in list_of_actual_symbols_str_sorted],
     )
 
-    for i, symbol in enumerate(sorted(tmp_df["segment_symbol"].unique().tolist())):
+    for i, symbol in enumerate(list_of_actual_symbols_str_sorted):
         pos_symb = 0.5 * np.array(
             tmp_df.loc[tmp_df["segment_symbol"] == symbol]["Finish"].values
             + tmp_df.loc[tmp_df["segment_symbol"] == symbol]["Start"].values
@@ -170,10 +174,10 @@ def plot_symbol_distr(df_temp, mode, n_symbols):
         row=n_symbols,
         col=1
     )
-    for symbol in range(0, n_symbols):
+    for i in range(0, len(list_of_actual_symbols_str_sorted)):
         fig.update_yaxes(
 			title_text="Occurence",
-			row=symbol+1,
+			row=i+1,
 			col=1
 		)
     fig.update_layout(
@@ -191,7 +195,8 @@ def plot_dendrogram(centroids):
 	fig = ff.create_dendrogram(centroids)
 	fig.update_layout(
         xaxis_title="Symbol",
-    	yaxis_title="Distance between symbols"
+    	yaxis_title="Distance between symbols",
+        title="Dendrogram"
     )
 	return fig
 
@@ -341,14 +346,31 @@ def Visualize_step():
                 )
 
                 fig = plot_symbolization(df_temp, mode=mode_length, n_symbols=n_symbols)
+                st.markdown(
+                    "First of all, let us look at the whole data set of"
+                    " multivariate time series at once."
+                    " In the following color bar, each row is a color bar"
+                    " corresponding to the univariate symbolic sequence of a"
+                    " multivariate time series."
+				)
                 st.plotly_chart(fig, use_container_width=True)
                 fig_dist = plot_symbol_distr(df_temp, mode=mode_length, n_symbols=n_symbols)
+                st.markdown(
+                    "Let us investigate around which time stamp each symbol"
+                    " occurs most."
+                    " For each occurence of a symbol, the position taken is the"
+                    " middle of each segment."
+				)
                 st.plotly_chart(fig_dist, use_container_width=True)
                 fig_dendrogam = plot_dendrogram(centroids)
                 st.markdown(
-                    "Explore the distance between the individual symbols, which"
-                    " is the distance between the centroids obtained using K-Means."
-                    " (It is not the distance between time series.)"
+                    "Let us explore the distance between the individual symbols"
+                    " and how they are grouped according to hierarchical clustering"
+                    " thanks to a dendrogram."
+                    " Each symbol represented by its centroid obtained using K-Means."
+                    " The distance between the individual symbols is the distance"
+                    " between their centroids."
+                    " (It is not the distance between time series, but between individual symbols.)"
                 )
                 st.plotly_chart(fig_dendrogam, use_container_width=True)
             elif mode == "Distance matrix":
