@@ -212,6 +212,9 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
     time series.
     """
 
+	# Get the number of dimensions
+	n_dim = dims[1] - dims[0]
+
 	# Define the colors for the symbols
 	if n_symbols<=10:
 		plotly_colors = px.colors.qualitative.G10
@@ -242,6 +245,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
         group_tasks=True,
         colors=dict_symbol_color,
     )
+    # Add the contour
 	fig_symb.update_traces(mode='lines', line_color='black', selector=dict(fill='toself'))
 	fig_symb.update_xaxes(type='linear')
 	for trace in fig_symb.data:
@@ -249,16 +253,20 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
         
 	# Create the subplots
 	fig = make_subplots(
-		rows=(dims[1] - dims[0]) + 1,
+		rows=n_dim+2,
 		cols=1,
         shared_xaxes=True,
-        subplot_titles=("Univariate symbolic sequence", "Multivariate time series")
+        subplot_titles=(
+            "Univariate symbolic sequence",
+            "",
+            "Multivariate time series, dimension by dimension"
+        )
     )
 
 	# Add the symbolic sequence
 	for trace in fig_symb.data:
 		fig.add_trace(trace, row=1, col=1)
-
+    
 	# Add each dimension
 	for i_row, i in enumerate(range(dims[0], dims[1])):
 		fig.add_trace(
@@ -268,15 +276,15 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
                 mode="lines",
                 line=dict(color="white", width=1),
             ),
-            row=i_row + 2,
+            row=i_row + 3,
             col=1,
         )
-    
+        
 	# Layout
-	fig.update_xaxes(title_text="Time stamp", row=21, col=1)
+	fig.update_xaxes(title_text="Time stamp", row=n_dim+2, col=1)
 	fig.update_layout(
         xaxis_type="linear",
-        height=min(2000, (dims[1] - dims[0]) * 50),
+        height=min(2000, n_dim * 52),
         showlegend=False,
         title="Chosen multivariate time series along with its univariate symbolic sequence."
     )
