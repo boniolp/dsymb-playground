@@ -24,19 +24,24 @@ def run():
     if "ALL_TS" not in st.session_state:
         st.session_state["ALL_TS"] = []
 
-    st.write("# Welcome to Symbol!")
+    st.write("# Welcome to the $d_{symb}$ playground!")
     st.markdown(
-        "Explore and interpret your multivariate time series data set using"
-        " the $d_{symb}$ symbolic representation."
-        " Use the `Explore` tab your visualize your raw time series along"
-        " with its computed $d_{symb}$ symbolization: the colorbars' list"
-        " of the symbolic sequences and the distance matrix between the"
-        " symbolic sequences."
-        " $d_{symb}$ transforms a multivariate time series into a"
-        " univariate symbolic sequence."
-        " Use the `Compare` tab to assess the relevance of $d_{symb}$ compared"
-        " to other distance measures on the JIGSAWS data set (all results are"
-        " pre-computed)."
+        """
+        Interpret and compare your multivariate time series data set using
+        the $d_{symb}$ symbolic representation.
+        $d_{symb}$ transforms a multivariate time series into an
+        interpretable univariate symbolic sequence.
+        The $d_{symb}$ representation comes with a distance measure defined
+        on the obtained symbolic sequences.
+        1. Use the `Explore` tab to interpret the $d_{symb}$ symbolization.
+        Visualize your raw time series along with their $d_{symb}$
+        symbolization: the colorbars' corresponding to
+        all symbolic sequences, and the $d_{symb}$ pairwise distance matrix
+        between the symbolic sequences.
+        2. Use the `Compare` tab to assess the relevance of the $d_{symb}$
+        distance measure, with regards to other distance measures, on the
+        JIGSAWS data set (all results are precomputed).
+        """
     )
 
     tab_explore, tab_compare, tab_about = st.tabs(

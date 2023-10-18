@@ -1,17 +1,19 @@
-about_text = f""" 
+about_text = """ 
 ## A fast interactive exploration of multivariate time series datasets
-Symbol is a Python-based web interactive tool to visualize, navigate, and explore 
-large multivariate time series datasets. It is based on a new symbolic representation, 
-**dsymb**, for multivariate time series. With our tool, exploring a dataset of 80 time 
+
+$d_{symb}$ playground is a Python-based web interactive tool to visualize,
+explore, and interpret large multivariate time series data sets.
+It is based on a novel symbolic representation, 
+called $d_{symb}$, for multivariate time series. With our tool, exploring a dataset of 80 time 
 series (with 80 dimensions and 5,000 timestamps) requires 20 seconds instead of 2,000 
 seconds for DTW-based analysis.
 
 ## Contributors
 
-* Sylvain W. Combettes (ENS Paris-Saclay)
-* Paul Boniol (ENS Paris-Saclay)
-* Charles Truong (ENS Paris-Saclay)
-* Laurent Oudre (ENS Paris-Saclay)
+* [Sylvain W. Combettes](https://sylvaincom.github.io/) (ENS Paris-Saclay)
+* [Paul Boniol](https://boniolp.github.io/) (ENS Paris-Saclay)
+* [Charles Truong](https://charles.doffy.net/) (ENS Paris-Saclay)
+* [Laurent Oudre](http://www.laurentoudre.fr/) (ENS Paris-Saclay)
 """
 
 
@@ -26,8 +28,9 @@ variables for the Cartesian position of the manipulator, 9 variables
 for the rotation matrix, 6 variables for the linear and angular
 velocity of the manipulator, and 1 variable for the gripper angle.
 
-A preprocesssed version of the dataset can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX). 
-These time series can be uploaded in the `Explore` tab.
+A preprocessed version of the dataset can be found
+[here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX). 
+Note that these time series can be uploaded in the `Explore` tab.
 """
 
 Baseline_desc =f"""
@@ -48,18 +51,17 @@ can be found in the [aeon](https://www.aeon-toolkit.org/en/latest/api_reference/
 - [d_symb](): TODO
 """
 
-compare_text_1 = f"""
+compare_text_1 = """
 
-## Compare d_symb with other distance measures.
+## Compare $d_{symb}$ with other distance measures.
 
-We now illustrate the relevance of d_symb on a real-world
-use case. In this use case, we use several distance measures on the
+We now illustrate the relevance of the $d_{symb}$ distance measure on a
+real-world use case.
+For this use case, we apply several distance measures to the
 [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) 
-in order to identify surgeons' gestures based on kinematic
-time series, which are generated when using robotic arms and grippers to perform these surgical tasks.
+in order to identify surgeons' gestures based on kinematic time series, which
+are generated when using robotic arms and grippers to perform these surgical tasks.
 All results are pre-computed (in order to save you some computing time).
-
-
 """
 
 compare_text_2 = f"""

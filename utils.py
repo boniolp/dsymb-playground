@@ -382,6 +382,19 @@ def get_data_step():
 def Visualize_step():
     if len(st.session_state.ALL_TS) >= 1:
         n_symbols = st.slider("Choose the number of symbols:", 0, 25, 5)
+        
+        st.markdown(
+            """
+			Then, use the `Single time series` tab to visualize your chosen raw
+            multivariate time series along with its univariate symbolic
+            representation.
+			Use the `Data set of time series` tab to visualization your data set
+			with only one glance using the $d_{symb}$ colorbars.
+			It also provides some insights on your symbolization to help you
+			interpret a symbol as a real-world event in your data.
+			"""
+		)
+
         D1, df_temp, lookup_table, centroids = dsym(st.session_state.ALL_TS, n_symbols)
         tab_indiv, tab_all = st.tabs(["Single time series", "Data set of time series"])
         with tab_indiv:
@@ -406,7 +419,7 @@ def Visualize_step():
             range_dims += [
                 [0, len(st.session_state.ALL_TS[time_series_selected][0])]
             ]
-            dims = st.selectbox("Choose the dimensions' range:", range_dims)
+            dims = st.selectbox("Choose the dimensions' range (for conciseness purposes):", range_dims)
             plot_time_series(
                 ts=st.session_state.ALL_TS[time_series_selected],
                 tmp_df=df_temp.loc[df_temp["signal_index"] == time_series_selected],
@@ -417,14 +430,14 @@ def Visualize_step():
         with tab_all:
             mode = st.radio(
                 "Mode",
-                ["Colorbars' list", "Distance matrix"],
+                ["Colorbars", "Distance matrix"],
                 captions=[
-                    "Visualize all the symbolized time series.",
-                    "Visualize the distance matrix based on d_symb.",
+                    "Visualize all the symbolized time series using colobars.",
+                    "Visualize the distance matrix based on $d_{symb}$.",
                 ],
                 horizontal=True,
             )
-            if mode == "Colorbars' list":
+            if mode == "Colorbars":
                 mode_length = st.radio(
                     "Length",
                     ["True", "Normalized"],
@@ -439,58 +452,82 @@ def Visualize_step():
 
                 fig = plot_symbolization(df_temp, mode=mode_length, n_symbols=n_symbols)
                 st.markdown(
-                    "First of all, let us look at the whole data set of"
-                    " multivariate time series at once."
-                    " In the following color bar, each row is a color bar"
-                    " corresponding to the univariate symbolic sequence of a"
-                    " multivariate time series."
+                    """
+                    First of all, let us visualize the whole data set of
+                    multivariate time series at once.
+                    In the following color bars, each row is a color bar
+                    corresponding to the univariate symbolic sequence of a
+                    multivariate time series.
+                    """
 				)
                 st.plotly_chart(fig, use_container_width=True)
                 
-                st.markdown("### Insights on the symbolization of your data set")
-                
                 st.markdown(
-                    "Which symbols occur more often (out of the whole data set)?"
+                    """
+                    ### Insights on the symbolization of your data set
+                    
+                    Now, let us provide some insights on your symbolization to
+                    help you interpret a symbol as a real-world event in your data.
+                    """
+				)
+                st.markdown(
+                    """
+                    Which symbols occur more often (out of the whole data set)?
+                    Which symbols represent more recurring events?
+                    """
 				)
                 fig_symb_hist = plot_symb_hist(df_temp=df_temp, n_symbols=n_symbols)
                 st.plotly_chart(fig_symb_hist, use_container_width=True)
                 
                 st.markdown(
-                    "Which symbols have the shortest / longest duration?"
-                    " Which symbols encode short / long events?"
+                    """
+                    Which symbols have the shortest / longest duration?
+                    Which symbols encode short / long events?
+                    """
 				)
                 fig_symb_len = plot_symb_len(df_temp=df_temp, n_symbols=n_symbols)
                 st.plotly_chart(fig_symb_len, use_container_width=True)
                 
                 fig_dist = plot_symbol_distr(df_temp, mode=mode_length, n_symbols=n_symbols)
                 st.markdown(
-                    "Let us investigate around which time stamp each symbol"
-                    " occurs most."
-                    " For each occurrence of a symbol, the position taken is the"
-                    " middle of each segment."
-                    " For example, one could notice that a specific symbol occurs"
-                    " mostly at the beginning of a time series."
+                    """
+                    Let us investigate around which time stamp each symbol
+                    occurs most.
+                    For each occurrence of a symbol, the position taken is the
+                    middle of each segment.
+                    For example, one could notice that a specific symbol occurs
+                    mostly at the beginning of a time series.
+                    """
 				)
                 st.plotly_chart(fig_dist, use_container_width=True)
                 
                 st.markdown(
-                    "Let us visualize the centroids that are characteristic of"
-                	" each symbol. Are there centroids that look alike / afar?"
-                    " What about the range of their amplitudes?"
+                    """
+                    Let us visualize the centroids that are characteristic of
+                	each symbol.
+                    Are there centroids that look alike / afar?
+                    What about the range of their amplitudes?
+                    """
 				)
                 fig_centroids = plot_cluster_centers(centroids)
                 st.plotly_chart(fig_centroids, use_container_width=True)
                 
                 fig_dendrogam = plot_dendrogram(centroids)
                 st.markdown(
-                    "Now, let us quantify ou previous intuition about the centroids."
-                	" We explore the distance between the individual symbols"
-                    " and how they are grouped according to hierarchical clustering"
-                    " thanks to a dendrogram."
-                    " Each symbol represented by its centroid obtained using K-Means."
-                    " The distance between the individual symbols is the distance"
-                    " between their centroids."
-                    " (It is not the distance between time series, but between individual symbols.)"
+                    """
+                    Now, let us quantify our previous intuitions about the centroids.
+                	We investigate the distance between the individual symbols
+                    and how they are grouped according to hierarchical clustering
+                    thanks to a dendrogram.
+                    Each symbol is represented by its corresponding centroid
+                    obtained using K-Means.
+                    The distance between the individual symbols is the Euclidean
+                    distance between their centroids.
+                	Note: it is not the distance between time series, but between
+                    individual symbols.
+                    Do symbols with a small distance effectively look alike in
+                    in the above plot?
+                    """
                 )
                 st.plotly_chart(fig_dendrogam, use_container_width=True)
             elif mode == "Distance matrix":
@@ -498,18 +535,26 @@ def Visualize_step():
                 st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
-    st.markdown("## Explore your data set.")
-    st.markdown(
-        "Upload your data set of (multivariate) time series, each time series must be in a `.csv`"
-        " file with the shape `(n_timestamps, n_dim)`."
-        " Then, select the number of symbols to represent your time series."
+	st.markdown("## Explore your data set")
+	st.markdown(
+        """
+        Upload your data set of (multivariate) time series: each time series
+        must be in a `.csv` file with the shape `(n_timestamps, n_dim)`.
+        """
     )
 
-    get_data_step()
+	get_data_step()
+     
+	st.markdown(
+        """
+        Select the number of symbols to represent your time series using
+        $d_{symb}$.
+        """
+    )
 
-    Visualize_step()
+	Visualize_step()
 
-    gc.collect()
+	gc.collect()
 
 
 def run_compare_frame():
@@ -609,4 +654,4 @@ def run_compare_frame():
     
 
 def run_about_frame():
-    st.markdown(about_text)
+	st.markdown(about_text)

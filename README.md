@@ -16,7 +16,7 @@
 <img width="500" src="./figures/demo_capture.gif"/>
 </p>
 
-Symbol is a Python-based web interactive tool to visualize, navigate, and explore large multivariate time series datasets. It is based on a new symbolic representation, $d_{symb}$, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimensions and 5,000 timestamps) requires 20 seconds instead of 2,000 seconds for DTW-based analysis.
+$d_{symb}$ playground is a Python-based web interactive tool to visualize, explore, and interpret large multivariate time series datasets. It is based on a new symbolic representation, $d_{symb}$, for multivariate time series. With our tool, exploring a dataset of 80 time series (with 80 dimensions and 5,000 timestamps) requires 20 seconds instead of 2,000 seconds for DTW-based analysis.
 
 ### Reference
 
@@ -26,23 +26,23 @@ Symbol is a Python-based web interactive tool to visualize, navigate, and explor
 
 ```bibtex
 @article{symbol,
-  title={},
-  author={},
-  journal={},
+  title={An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals},
+  author={Sylvain W. Combettes and Charles Truong and Laurent Oudre},
+  journal={(to appear)},
   volume={},
   number={},
   pages={},
-  year={},
+  year={2023},
   publisher={}
 }
 ```
 
 ## Contributors
 
-* Sylvain W. Combettes (ENS Paris Saclay)
-* Paul Boniol (ENS Paris Saclay)
-* Charles Truong (ENS Paris Saclay)
-* Laurent Oudre (ENS Paris Saclay)
+* [Sylvain W. Combettes](https://sylvaincom.github.io/) (ENS Paris-Saclay)
+* [Paul Boniol](https://boniolp.github.io/) (ENS Paris-Saclay)
+* [Charles Truong](https://charles.doffy.net/) (ENS Paris-Saclay)
+* [Laurent Oudre](http://www.laurentoudre.fr/) (ENS Paris-Saclay)
 
 
 ## Usage
