@@ -47,12 +47,20 @@ def preprocess_data(uploaded_ts):
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def plot_matrix(D1, distance_name=""):
-    return px.imshow(D1, aspect="auto", title=f"Distance matrix with {distance_name}")
+    fig = px.imshow(
+        D1,
+        aspect="auto",
+        title=f"Parwise distance matrix between time series using {distance_name}",
+	)
+    fig.update_xaxes(title_text="Times series index")
+    fig.update_yaxes(title_text="Times series index")
+    return fig
 
 
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
 def plot_symbolization(df_temp, mode):
     tmp_df = df_temp
+    n_signals = tmp_df["signal_index"].nunique()
     tmp_df = tmp_df.rename(
         columns={
             "segment_start": "Start",
@@ -78,7 +86,7 @@ def plot_symbolization(df_temp, mode):
     fig = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
-        bar_width=0.4,
+        bar_width=max(0.4, n_signals*0.005),
         show_colorbar=True,
         group_tasks=True,
         colors={
@@ -88,11 +96,13 @@ def plot_symbolization(df_temp, mode):
     )
     fig.update_layout(
         xaxis_type="linear",
-        height=1000,
-        title_text="All symbolic sequences in the data set",
+        height=max(300, n_signals * 15),
+        xaxis_title="Time stamp",
+    	yaxis_title="Symbolic sequence",
+        title_text="Visualizing all symbolic sequences in the data set",
         legend=dict(
         	title=dict(text="Symbol")
-    	)
+    	),
     )
     return fig
 
@@ -222,9 +232,7 @@ def get_data_step():
     uploaded_ts = st.file_uploader(
         "Upload your time series:", accept_multiple_files=True
     )
-    # if len(uploaded_ts) == 1:
-    #     st.markdown("Multiple time series should be provided.")
-    if len(uploaded_ts) >= 1: # before: 2
+    if len(uploaded_ts) >= 1:
         try:
             st.session_state.ALL_TS = preprocess_data(uploaded_ts)
         except Exception as e:
@@ -235,7 +243,7 @@ def get_data_step():
 
 
 def Visualize_step():
-    if len(st.session_state.ALL_TS) > 1:
+    if len(st.session_state.ALL_TS) >= 1:
         n_symbols = st.slider("Choose the number of symbols:", 0, 25, 5)
         D1, df_temp, lookup_table = dsym(st.session_state.ALL_TS, n_symbols)
         tab_indiv, tab_all = st.tabs(["Single time series", "Data set of time series"])

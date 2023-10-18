@@ -32,6 +32,8 @@ def run():
         " with its computed $d_{symb}$ symbolization: the colorbars' list"
         " of the symbolic sequences and the distance matrix between the"
         " symbolic sequences."
+        " $d_{symb}$ transforms a multivariate time series into a"
+        " univariate symbolic sequence."
         " Use the `Compare` tab to assess the relevance of $d_{symb}$ compared"
         " to other distance measures on the JIGSAWS data set (all results are"
         " pre-computed)."
