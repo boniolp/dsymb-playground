@@ -39,8 +39,8 @@ Symbol is a Python-based web interactive tool to visualize, navigate, and explor
 
 ## Contributors
 
-* Paul Boniol (ENS Paris Saclay)
 * Sylvain W. Combettes (ENS Paris Saclay)
+* Paul Boniol (ENS Paris Saclay)
 * Charles Truong (ENS Paris Saclay)
 * Laurent Oudre (ENS Paris Saclay)
 

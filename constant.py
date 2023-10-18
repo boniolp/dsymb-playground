@@ -8,8 +8,8 @@ seconds for DTW-based analysis.
 
 ## Contributors
 
-* Paul Boniol (ENS Paris-Saclay)
 * Sylvain W. Combettes (ENS Paris-Saclay)
+* Paul Boniol (ENS Paris-Saclay)
 * Charles Truong (ENS Paris-Saclay)
 * Laurent Oudre (ENS Paris-Saclay)
 """
