@@ -29,11 +29,6 @@ from streamlit_plotly_events import plotly_events
 
 from dsymb import *
 
-r = lambda: random.randint(50, 255)
-DEFAULT_PLOTLY_COLORS = {
-    str(i): "#%02X%02X%02X" % (r(), r(), r()) for i in range(25)
-}
-
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def preprocess_data(uploaded_ts):
@@ -46,9 +41,9 @@ def preprocess_data(uploaded_ts):
 
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
-def plot_matrix(D1, distance_name=""):
+def plot_matrix(distance_arr, distance_name=""):
     fig = px.imshow(
-        D1,
+        distance_arr,
         aspect="auto",
         title=f"Parwise distance matrix between time series using {distance_name}",
 	)
@@ -60,6 +55,11 @@ def plot_matrix(D1, distance_name=""):
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
 def plot_symbolization(df_temp, mode):
     tmp_df = df_temp
+    n_symbols = tmp_df["segment_symbol"].nunique()
+    if n_symbols<=10:
+        plotly_colors = px.colors.qualitative.G10
+    else:
+        plotly_colors = px.colors.qualitative.Alphabet
     n_signals = tmp_df["signal_index"].nunique()
     tmp_df = tmp_df.rename(
         columns={
@@ -82,17 +82,17 @@ def plot_symbolization(df_temp, mode):
         tmp_df["max"] = all_max_length
         tmp_df["Start"] = tmp_df["Start"] / tmp_df["max"]
         tmp_df["Finish"] = tmp_df["Finish"] / tmp_df["max"]
-
+    dict_symbol_color = {
+		key: plotly_colors[int(key)]
+		for key in tmp_df["segment_symbol"].unique().tolist()
+	}
     fig = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
         bar_width=max(0.4, n_signals*0.005),
         show_colorbar=True,
         group_tasks=True,
-        colors={
-            key: DEFAULT_PLOTLY_COLORS[key]
-            for key in set(tmp_df["segment_symbol"].values)
-        },
+        colors=dict_symbol_color,
     )
     fig.update_layout(
         xaxis_type="linear",
@@ -109,7 +109,9 @@ def plot_symbolization(df_temp, mode):
 
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
 def plot_symbol_distr(df_temp, mode):
-    tmp_df = df_temp
+    """Plot the distribution of each symbol over time.
+    """
+    tmp_df = df_temp.sort_values(by=["segment_symbol"])
     tmp_df = tmp_df.rename(
         columns={
             "segment_start": "Start",
@@ -136,10 +138,14 @@ def plot_symbol_distr(df_temp, mode):
         tmp_df["Start"] = tmp_df["Start"] / tmp_df["max"]
         tmp_df["Finish"] = tmp_df["Finish"] / tmp_df["max"]
 
-    n_symbols = len(set(tmp_df["segment_symbol"].values))
+    n_symbols = tmp_df["segment_symbol"].nunique()
+    if n_symbols<=10:
+        plotly_colors = px.colors.qualitative.G10
+    else:
+        plotly_colors = px.colors.qualitative.Alphabet
 
     fig = make_subplots(
-        rows=len(list(set(tmp_df["segment_symbol"].values))),
+        rows=n_symbols,
         cols=1,
         shared_xaxes=True,
     )
@@ -153,19 +159,29 @@ def plot_symbol_distr(df_temp, mode):
             [pos_symb],
             group_labels=["{}".format(symbol)],
             show_hist=True,
-            colors=[DEFAULT_PLOTLY_COLORS[symbol]],
+            colors=[plotly_colors[int(symbol)]],
             bin_size=bin_size,
             show_curve=False,
             show_rug=False,
         )
         for trace in fig_symb.data:
             fig.add_trace(trace, row=1 + i, col=1)
+    
+    fig.update_xaxes(
+        title_text="Time stamp",
+        row=n_symbols,
+        col=1
+    )
+    for symbol in range(0, n_symbols):
+        fig.update_yaxes(
+			title_text="Occurence",
+			row=symbol+1,
+			col=1
+		)
     fig.update_layout(
         xaxis_type="linear",
-        height=min(1000, 100 * n_symbols),
-        title_text="Symbols' frequency over time",
-        xaxis_title="Time stamp",
-    	yaxis_title="Symbol",
+        height=max(300, n_symbols * 150),
+        title_text="Symbols' occurence over time",
         legend=dict(
         	title=dict(text="Symbol")
     	)
@@ -175,34 +191,45 @@ def plot_symbol_distr(df_temp, mode):
 
 def plot_time_series(ts, tmp_df, dims=[0, 20]):
     # tmp_df = df_temp.copy()
-    tmp_df = tmp_df.rename(
+	n_symbols = tmp_df["segment_symbol"].nunique()
+	if n_symbols<=10:
+		plotly_colors = px.colors.qualitative.G10
+	else:
+		plotly_colors = px.colors.qualitative.Alphabet
+	tmp_df = tmp_df.rename(
         columns={
             "segment_start": "Start",
             "segment_end": "Finish",
             "signal_index": "Task",
         }
     )
-    tmp_df["segment_symbol"] = tmp_df["segment_symbol"].apply(str)
-    tmp_df["Task"] = tmp_df["Task"].apply(str)
-    fig_symb = ff.create_gantt(
+	tmp_df["segment_symbol"] = tmp_df["segment_symbol"].apply(str)
+	tmp_df["Task"] = tmp_df["Task"].apply(str)
+	dict_symbol_color = {
+		key: plotly_colors[int(key)]
+		for key in tmp_df["segment_symbol"].unique().tolist()
+	}
+	fig_symb = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
         bar_width=0.4,
         show_colorbar=True,
         group_tasks=True,
-        colors={
-            key: DEFAULT_PLOTLY_COLORS[key]
-            for key in set(tmp_df["segment_symbol"].values)
-        },
+        colors=dict_symbol_color,
     )
 
-    fig = make_subplots(rows=(dims[1] - dims[0]) + 1, cols=1, shared_xaxes=True)
+	fig = make_subplots(
+		rows=(dims[1] - dims[0]) + 1,
+		cols=1,
+        shared_xaxes=True,
+        subplot_titles=("Univariate symbolic sequence", "Multivariate time series")
+    )
 
-    for trace in fig_symb.data:
-        fig.add_trace(trace, row=1, col=1)
+	for trace in fig_symb.data:
+		fig.add_trace(trace, row=1, col=1)
 
-    for i_row, i in enumerate(range(dims[0], dims[1])):
-        fig.add_trace(
+	for i_row, i in enumerate(range(dims[0], dims[1])):
+		fig.add_trace(
             go.Scattergl(
                 x=list(range(len(ts))),
                 y=ts[:, i],
@@ -212,20 +239,19 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
             row=i_row + 2,
             col=1,
         )
-    fig.update_layout(
+	fig.update_xaxes(title_text="Time stamp", row=21, col=1)
+	fig.update_layout(
         xaxis_type="linear",
         height=min(2000, (dims[1] - dims[0]) * 50),
         showlegend=False,
-        xaxis_title="Time stamp",
-    	yaxis_title="Dimension",
         title_text=(
             "Plot of your chosen multivariate time series<br>along with its"
-            "univariate d_symb symbolic sequence (on top)"
+            " univariate d_symb symbolic sequence (on top)"
 		),
     )
-    st.plotly_chart(fig, use_container_width=True)
-    del fig, fig_symb
-    gc.collect()
+	st.plotly_chart(fig, use_container_width=True)
+	del fig, fig_symb
+	gc.collect()
 
 
 def get_data_step():
