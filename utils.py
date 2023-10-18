@@ -254,6 +254,28 @@ def plot_symb_len(df_temp, n_symbols):
     )
     return fig
 
+@st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
+def plot_cluster_centers(centroids):
+    fig = go.Figure()
+    for dim in list(np.arange(0, centroids.shape[0])):
+        series_plot = centroids[dim, :]
+        fig.add_trace(
+            go.Scatter(
+                x=np.arange(0, len(series_plot)),
+                y=series_plot,
+                mode='lines+markers',
+                name=f"{dim}"
+            )
+        )
+    fig.update_layout(
+        title="Plotting each centroid (corresponding to a symbol) along the dimensions",
+        legend=dict(
+        	title=dict(text="Symbol")
+    	),
+        xaxis_title="Dimension",
+	)
+    return fig
+
 
 def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
 	"""Plot the univariate symbolic sequence as well as the multivariate
@@ -413,6 +435,8 @@ def Visualize_step():
                     horizontal=True,
                 )
 
+                st.markdown("### Overview of your symbolized data set")
+
                 fig = plot_symbolization(df_temp, mode=mode_length, n_symbols=n_symbols)
                 st.markdown(
                     "First of all, let us look at the whole data set of"
@@ -423,14 +447,17 @@ def Visualize_step():
 				)
                 st.plotly_chart(fig, use_container_width=True)
                 
+                st.markdown("### Insights on the symbolization of your data set")
+                
                 st.markdown(
-                    "Why symbol occurs more out of the whole data set?"
+                    "Which symbols occur more often (out of the whole data set)?"
 				)
                 fig_symb_hist = plot_symb_hist(df_temp=df_temp, n_symbols=n_symbols)
                 st.plotly_chart(fig_symb_hist, use_container_width=True)
                 
                 st.markdown(
-                    "Which symbols have the longest duration?"
+                    "Which symbols have the shortest / longest duration?"
+                    " Which symbols encode short / long events?"
 				)
                 fig_symb_len = plot_symb_len(df_temp=df_temp, n_symbols=n_symbols)
                 st.plotly_chart(fig_symb_len, use_container_width=True)
@@ -441,12 +468,23 @@ def Visualize_step():
                     " occurs most."
                     " For each occurrence of a symbol, the position taken is the"
                     " middle of each segment."
+                    " For example, one could notice that a specific symbol occurs"
+                    " mostly at the beginning of a time series."
 				)
                 st.plotly_chart(fig_dist, use_container_width=True)
                 
+                st.markdown(
+                    "Let us visualize the centroids that are characteristic of"
+                	" each symbol. Are there centroids that look alike / afar?"
+                    " What about the range of their amplitudes?"
+				)
+                fig_centroids = plot_cluster_centers(centroids)
+                st.plotly_chart(fig_centroids, use_container_width=True)
+                
                 fig_dendrogam = plot_dendrogram(centroids)
                 st.markdown(
-                    "Let us explore the distance between the individual symbols"
+                    "Now, let us quantify ou previous intuition about the centroids."
+                	" We explore the distance between the individual symbols"
                     " and how they are grouped according to hierarchical clustering"
                     " thanks to a dendrogram."
                     " Each symbol represented by its centroid obtained using K-Means."
