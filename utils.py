@@ -209,7 +209,7 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
         xaxis_title="Time stamp",
     	yaxis_title="Dimension",
         title_text=(
-            "Plot of your chosen multivariate time series<br> along with its"
+            "Plot of your chosen multivariate time series<br>along with its"
             "univariate d_symb symbolic sequence (on top)"
 		),
     )
@@ -297,7 +297,6 @@ def Visualize_step():
                 fig = plot_matrix(D1, distance_name="d_symb")
                 st.plotly_chart(fig, use_container_width=True)
 
-
 def run_explore_frame():
     st.markdown("## Explore your data set.")
     st.markdown(
@@ -316,14 +315,14 @@ def run_explore_frame():
 def run_compare_frame():
     st.markdown(compare_text_1)
 
-    tab_data_desc, tab_basesline_desc = st.tabs(
+    tab_data_desc, tab_baseline_desc = st.tabs(
         ["Data set description", "Baselines description"]
     )
 
     with tab_data_desc:
         st.markdown(data_JIGSAW)
 
-    with tab_basesline_desc:
+    with tab_baseline_desc:
         st.markdown(Baseline_desc)
 
     st.markdown(compare_text_2)
@@ -399,7 +398,7 @@ def run_compare_frame():
     	)
 	)
     st.plotly_chart(fig_acc, use_container_width=True)
-
+    
 
 def run_about_frame():
     st.markdown(about_text)
