@@ -255,7 +255,11 @@ def plot_symb_len(df_temp, n_symbols):
     return fig
 
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
-def plot_cluster_centers(centroids):
+def plot_cluster_centers(centroids, n_symbols):
+    if n_symbols<=10:
+        plotly_colors = px.colors.qualitative.G10
+    else:
+        plotly_colors = px.colors.qualitative.Alphabet
     fig = go.Figure()
     for dim in list(np.arange(0, centroids.shape[0])):
         series_plot = centroids[dim, :]
@@ -263,8 +267,9 @@ def plot_cluster_centers(centroids):
             go.Scatter(
                 x=np.arange(0, len(series_plot)),
                 y=series_plot,
+                line=dict(color=plotly_colors[dim]),
                 mode='lines+markers',
-                name=f"{dim}"
+                name=f"{dim}",
             )
         )
     fig.update_layout(
@@ -509,7 +514,7 @@ def Visualize_step():
                     What about the range of their amplitudes?
                     """
 				)
-                fig_centroids = plot_cluster_centers(centroids)
+                fig_centroids = plot_cluster_centers(centroids=centroids, n_symbols=n_symbols)
                 st.plotly_chart(fig_centroids, use_container_width=True)
                 
                 fig_dendrogam = plot_dendrogram(centroids)
