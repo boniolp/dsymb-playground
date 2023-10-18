@@ -88,17 +88,24 @@ def plot_symbolization(df_temp, mode, n_symbols):
     fig = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
-        bar_width=max(0.35, n_signals*0.005),
+        bar_width=max(0.45, n_signals*0.006),
         show_colorbar=True,
+        showgrid_x=True,
         group_tasks=True,
         colors=dict_symbol_color,
     )
+    # Adding the contour to each symbol
+    fig.update_traces(mode='lines', line_color='black', selector=dict(fill='toself'))
+    fig.update_xaxes(type='linear')
+    for trace in fig.data:
+        print(trace)
+    # Update the layout
     fig.update_layout(
         xaxis_type="linear",
-        height=max(350, n_signals * 15),
+        height=max(400, n_signals * 20),
         xaxis_title="Time stamp",
     	yaxis_title="Symbolic sequence index",
-        title_text="Color bars of all symbolic sequences in the data set",
+        title_text="Colorbars of all symbolic sequences in the data set",
         legend=dict(
         	title=dict(text="Symbol")
     	),
@@ -235,7 +242,11 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
         group_tasks=True,
         colors=dict_symbol_color,
     )
-
+	fig_symb.update_traces(mode='lines', line_color='black', selector=dict(fill='toself'))
+	fig_symb.update_xaxes(type='linear')
+	for trace in fig_symb.data:
+		print(trace)
+        
 	# Create the subplots
 	fig = make_subplots(
 		rows=(dims[1] - dims[0]) + 1,
