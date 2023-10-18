@@ -89,16 +89,16 @@ def plot_symbolization(df_temp, mode):
     fig = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
-        bar_width=max(0.4, n_signals*0.005),
+        bar_width=max(0.35, n_signals*0.005),
         show_colorbar=True,
         group_tasks=True,
         colors=dict_symbol_color,
     )
     fig.update_layout(
         xaxis_type="linear",
-        height=max(300, n_signals * 15),
+        height=max(350, n_signals * 15),
         xaxis_title="Time stamp",
-    	yaxis_title="Symbolic sequence",
+    	yaxis_title="Symbolic sequence index",
         title_text="Visualizing all symbolic sequences in the data set",
         legend=dict(
         	title=dict(text="Symbol")
@@ -190,12 +190,18 @@ def plot_symbol_distr(df_temp, mode):
 
 
 def plot_time_series(ts, tmp_df, dims=[0, 20]):
-    # tmp_df = df_temp.copy()
+	"""Plot the univariate symbolic sequence as well as the multivariate
+    time series.
+    """
+
+	# Define the colors for the symbols
 	n_symbols = tmp_df["segment_symbol"].nunique()
 	if n_symbols<=10:
 		plotly_colors = px.colors.qualitative.G10
 	else:
 		plotly_colors = px.colors.qualitative.Alphabet
+    
+	# Transform the data frame to make it compatible with Gantt charts
 	tmp_df = tmp_df.rename(
         columns={
             "segment_start": "Start",
@@ -209,6 +215,8 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
 		key: plotly_colors[int(key)]
 		for key in tmp_df["segment_symbol"].unique().tolist()
 	}
+     
+	# Create the Gantt chart for the univariate symbolic sequence
 	fig_symb = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
@@ -218,6 +226,7 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
         colors=dict_symbol_color,
     )
 
+	# Create the subplots
 	fig = make_subplots(
 		rows=(dims[1] - dims[0]) + 1,
 		cols=1,
@@ -225,9 +234,11 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
         subplot_titles=("Univariate symbolic sequence", "Multivariate time series")
     )
 
+	# Add the symbolic sequence
 	for trace in fig_symb.data:
 		fig.add_trace(trace, row=1, col=1)
 
+	# Add each dimension
 	for i_row, i in enumerate(range(dims[0], dims[1])):
 		fig.add_trace(
             go.Scattergl(
@@ -239,16 +250,16 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
             row=i_row + 2,
             col=1,
         )
+    
+	# Layout
 	fig.update_xaxes(title_text="Time stamp", row=21, col=1)
 	fig.update_layout(
         xaxis_type="linear",
         height=min(2000, (dims[1] - dims[0]) * 50),
         showlegend=False,
-        title_text=(
-            "Plot of your chosen multivariate time series<br>along with its"
-            " univariate d_symb symbolic sequence (on top)"
-		),
+        title="Chosen multivariate time series along with its univariate symbolic sequence."
     )
+     
 	st.plotly_chart(fig, use_container_width=True)
 	del fig, fig_symb
 	gc.collect()
@@ -378,19 +389,18 @@ def run_compare_frame():
         "ddtw_dep":"DDTW dependent",
         "wdtw_dep":"WDTW dependent",
         "wddtw_dep":"WDDTW dependent",
-        "msm":"MSM",
-        "twe":"TWE",
         "lcss":"LCSS",
         "erp":"ERP",
         "edr":"EDR",
+        "msm":"MSM",
+        "twe":"TWE",
         "dsymb":"d_symb",
 	}
     d_replace_distance_inv = dict()
     for key, value in d_replace_distance.items():
         d_replace_distance_inv[value] = key
-    list_distances = [d_replace_distance[dist_abb] for dist_abb in df_acc.columns]
+    list_distances = list(d_replace_distance_inv.keys())
 
-    # measure = st.selectbox('choose Evaluation Measures', list(df_acc.index))
     dist_name = st.selectbox("Choose a distance measure:", list_distances)
     dist_abb = d_replace_distance_inv[dist_name]
 
@@ -417,6 +427,11 @@ def run_compare_frame():
         yaxis_title="Clustering execution time (in seconds)",
         showlegend=False,
 	)
+    fig_time.update_xaxes(
+		categoryorder='array',
+		categoryarray=list(d_replace_distance_inv.keys()),
+    )
+
     st.plotly_chart(fig_time, use_container_width=True)
 
 	
@@ -431,6 +446,10 @@ def run_compare_frame():
         	title=dict(text="Evaluation metric")
     	)
 	)
+    fig_time.update_xaxes(
+		categoryorder='array',
+		categoryarray=list(d_replace_distance_inv.keys()),
+    )
     st.plotly_chart(fig_acc, use_container_width=True)
     
 
