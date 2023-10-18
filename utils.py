@@ -188,6 +188,14 @@ def plot_symbol_distr(df_temp, mode):
     )
     return fig
 
+@st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
+def plot_dendrogram(centroids):
+	fig = ff.create_dendrogram(centroids)
+	fig.update_layout(
+        xaxis_title="Symbol",
+    	yaxis_title="Distance between symbols"
+    )
+	return fig
 
 def plot_time_series(ts, tmp_df, dims=[0, 20]):
 	"""Plot the univariate symbolic sequence as well as the multivariate
@@ -282,7 +290,7 @@ def get_data_step():
 def Visualize_step():
     if len(st.session_state.ALL_TS) >= 1:
         n_symbols = st.slider("Choose the number of symbols:", 0, 25, 5)
-        D1, df_temp, lookup_table = dsym(st.session_state.ALL_TS, n_symbols)
+        D1, df_temp, lookup_table, centroids = dsym(st.session_state.ALL_TS, n_symbols)
         tab_indiv, tab_all = st.tabs(["Single time series", "Data set of time series"])
         with tab_indiv:
             time_series_selected = st.selectbox(
@@ -338,6 +346,13 @@ def Visualize_step():
                 st.plotly_chart(fig, use_container_width=True)
                 fig_dist = plot_symbol_distr(df_temp, mode=mode_length)
                 st.plotly_chart(fig_dist, use_container_width=True)
+                fig_dendrogam = plot_dendrogram(centroids)
+                st.markdown(
+                    "Explore the distance between the individual symbols, which"
+                    " is the distance between the centroids obtained using K-Means."
+                    " (It is not the distance between time series.)"
+                )
+                st.plotly_chart(fig_dendrogam, use_container_width=True)
             elif mode == "Distance matrix":
                 fig = plot_matrix(D1, distance_name="d_symb")
                 st.plotly_chart(fig, use_container_width=True)

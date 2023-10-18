@@ -188,12 +188,12 @@ def get_multiscale_seg(X, n_clusters):
     labels, lookup_table, centroids = my_clustering(n_clusters, X)
     lookup_table = lookup_table / np.max(lookup_table)
 
-    return labels, lookup_table
+    return labels, lookup_table, centroids
 
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def dsym(list_of_multivariate_signals, n_symbols):
-    with st.spinner("Computing dsymb..."):
+    with st.spinner("Computing d_symb..."):
         pen_factor = 1_000_000
         n_signals = len(list_of_multivariate_signals)
 
@@ -238,7 +238,7 @@ def dsym(list_of_multivariate_signals, n_symbols):
         df_temp = seg_feat.fit(b_segmentation).transform(b_segmentation)
         X = df_temp.to_numpy()[:, : len(list_of_multivariate_signals[0][0])]
 
-        labels, lookup_table = get_multiscale_seg(X, n_symbols)
+        labels, lookup_table, centroids = get_multiscale_seg(X, n_symbols)
         df_temp["segment_symbol"] = labels
 
         symboli = compute_symbolisation(df_temp, n_signals)
@@ -247,4 +247,4 @@ def dsym(list_of_multivariate_signals, n_symbols):
         )
 
     gc.collect()
-    return D1, df_temp, lookup_table
+    return D1, df_temp, lookup_table, centroids
