@@ -53,9 +53,8 @@ def plot_matrix(distance_arr, distance_name=""):
 
 
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
-def plot_symbolization(df_temp, mode):
+def plot_symbolization(df_temp, mode, n_symbols):
     tmp_df = df_temp
-    n_symbols = tmp_df["segment_symbol"].nunique()
     if n_symbols<=10:
         plotly_colors = px.colors.qualitative.G10
     else:
@@ -108,7 +107,7 @@ def plot_symbolization(df_temp, mode):
 
 
 @st.cache_data(ttl=3600, max_entries=3, show_spinner=False)
-def plot_symbol_distr(df_temp, mode):
+def plot_symbol_distr(df_temp, mode, n_symbols):
     """Plot the distribution of each symbol over time.
     """
     tmp_df = df_temp.sort_values(by=["segment_symbol"])
@@ -138,7 +137,6 @@ def plot_symbol_distr(df_temp, mode):
         tmp_df["Start"] = tmp_df["Start"] / tmp_df["max"]
         tmp_df["Finish"] = tmp_df["Finish"] / tmp_df["max"]
 
-    n_symbols = tmp_df["segment_symbol"].nunique()
     if n_symbols<=10:
         plotly_colors = px.colors.qualitative.G10
     else:
@@ -197,13 +195,12 @@ def plot_dendrogram(centroids):
     )
 	return fig
 
-def plot_time_series(ts, tmp_df, dims=[0, 20]):
+def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
 	"""Plot the univariate symbolic sequence as well as the multivariate
     time series.
     """
 
 	# Define the colors for the symbols
-	n_symbols = tmp_df["segment_symbol"].nunique()
 	if n_symbols<=10:
 		plotly_colors = px.colors.qualitative.G10
 	else:
@@ -316,9 +313,10 @@ def Visualize_step():
             ]
             dims = st.selectbox("Choose the dimensions' range:", range_dims)
             plot_time_series(
-                st.session_state.ALL_TS[time_series_selected],
-                df_temp.loc[df_temp["signal_index"] == time_series_selected],
-                dims,
+                ts=st.session_state.ALL_TS[time_series_selected],
+                tmp_df=df_temp.loc[df_temp["signal_index"] == time_series_selected],
+                dims=dims,
+                n_symbols=n_symbols,
             )
 
         with tab_all:
@@ -342,9 +340,9 @@ def Visualize_step():
                     horizontal=True,
                 )
 
-                fig = plot_symbolization(df_temp, mode=mode_length)
+                fig = plot_symbolization(df_temp, mode=mode_length, n_symbols=n_symbols)
                 st.plotly_chart(fig, use_container_width=True)
-                fig_dist = plot_symbol_distr(df_temp, mode=mode_length)
+                fig_dist = plot_symbol_distr(df_temp, mode=mode_length, n_symbols=n_symbols)
                 st.plotly_chart(fig_dist, use_container_width=True)
                 fig_dendrogam = plot_dendrogram(centroids)
                 st.markdown(
