@@ -84,7 +84,7 @@ def plot_symbolization(df_temp, mode):
         tmp_df["Finish"] = tmp_df["Finish"] / tmp_df["max"]
     dict_symbol_color = {
 		key: plotly_colors[int(key)]
-		for key in tmp_df["segment_symbol"].unique().tolist()
+		for key in sorted(tmp_df["segment_symbol"].unique().tolist())
 	}
     fig = ff.create_gantt(
         tmp_df,
@@ -150,7 +150,7 @@ def plot_symbol_distr(df_temp, mode):
         shared_xaxes=True,
     )
 
-    for i, symbol in enumerate(set(tmp_df["segment_symbol"].values)):
+    for i, symbol in enumerate(sorted(tmp_df["segment_symbol"].unique().tolist())):
         pos_symb = 0.5 * np.array(
             tmp_df.loc[tmp_df["segment_symbol"] == symbol]["Finish"].values
             + tmp_df.loc[tmp_df["segment_symbol"] == symbol]["Start"].values
@@ -213,7 +213,7 @@ def plot_time_series(ts, tmp_df, dims=[0, 20]):
 	tmp_df["Task"] = tmp_df["Task"].apply(str)
 	dict_symbol_color = {
 		key: plotly_colors[int(key)]
-		for key in tmp_df["segment_symbol"].unique().tolist()
+		for key in sorted(tmp_df["segment_symbol"].unique().tolist())
 	}
      
 	# Create the Gantt chart for the univariate symbolic sequence
