@@ -1,12 +1,19 @@
 about_text = """ 
-## A fast interactive exploration of multivariate time series datasets
+## Fast interactive exploration of multivariate time series datasets
 
-$d_{symb}$ playground is a Python-based web interactive tool to visualize,
-explore, and interpret large multivariate time series data sets.
-It is based on a novel symbolic representation, 
-called $d_{symb}$, for multivariate time series. With our tool, exploring a dataset of 80 time 
-series (with 80 dimensions and 5,000 timestamps) requires 20 seconds instead of 2,000 
-seconds for DTW-based analysis.
+$d_{symb}$ playground is a Python-based web interactive tool to interpet and
+compare large multivariate time series data sets.
+It is based on a novel symbolic representation, called $d_{symb}$, for
+multivariate time series.
+$d_{symb}$ allows to visualize a data set of multivariate time series with
+a single glance, thus to quickly gain insights on your data.
+$d_{symb}$ also comes with a compatible distance measure to compare the
+obtained symbolic sequences.
+Apart from its relevance on data mining tasks, this distance measure is also
+fast.
+Indeed, comparing a dataset of 80 time series (with 80 dimensions
+and 5,000 timestamps) requires 20 seconds instead of 2,000 seconds for DTW-based
+analysis.
 
 ## Contributors
 

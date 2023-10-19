@@ -278,6 +278,7 @@ def plot_cluster_centers(centroids, n_symbols):
         	title=dict(text="Symbol")
     	),
         xaxis_title="Dimension",
+        yaxis_title="Amplitude",
 	)
     return fig
 
@@ -393,8 +394,8 @@ def Visualize_step():
 			Then, use the `Single time series` tab to visualize your chosen raw
             multivariate time series along with its univariate symbolic
             representation.
-			Use the `Data set of time series` tab to visualization your data set
-			with only one glance using the $d_{symb}$ colorbars.
+			Use the `Data set of time series` tab to explore and interpret
+            your data set with only one glance using the $d_{symb}$ colorbars.
 			It also provides some insights on your symbolization to help you
 			interpret a symbol as a real-world event in your data.
 			"""
@@ -530,8 +531,8 @@ def Visualize_step():
                     distance between their centroids.
                 	Note: it is not the distance between time series, but between
                     individual symbols.
-                    Do symbols with a small distance effectively look alike in
-                    in the above plot?
+                    Do symbols with a "small distance", thus considered "close",
+                    effectively look alike in in the above centroids plot?
                     """
                 )
                 st.plotly_chart(fig_dendrogam, use_container_width=True)
