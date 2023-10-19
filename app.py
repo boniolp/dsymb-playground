@@ -27,34 +27,35 @@ def run():
     st.write("# Welcome to the $d_{symb}$ playground!")
     st.markdown(
         """
-        Swiftly interpret and compare your multivariate time series data set
+        :technologist: :zap: Swiftly interpret and compare your multivariate time series data set
         using $d_{symb}$.
         $d_{symb}$ transforms a multivariate time series into an interpretable
         univariate symbolic sequence, and comes with an efficient distance
         measure defined on the obtained symbolic sequences.
         1. Use the `Explore` tab to interpret the $d_{symb}$ symbolization.
         Visualize your raw time series along with their $d_{symb}$
-        symbolization: the colorbars' corresponding to
-        all symbolic sequences, and the $d_{symb}$ pairwise distance matrix
-        between the symbolic sequences.
+        symbolization using the colorbars.
         With a single glance at the color bars, the symbolization provides an
         immediate and comprehensive undestanding of your data.
-        2. Use the `Compare` tab to assess the relevance of the $d_{symb}$
-        distance measure, with regards to other distance measures, on the
+        You can also visualize the $d_{symb}$ pairwise distance matrix
+        between the symbolic sequences.
+        2. Use the `Benchmark` tab to assess the relevance of the $d_{symb}$
+        distance measure, with regards to 9 other distance measures, on the
         JIGSAWS data set.
+        In particular, $d_{symb}$ is much faster than existing methods.
         For computational reasons of the benchmark, all results are precomputed.
         """
     )
 
-    tab_explore, tab_compare, tab_about = st.tabs(
-        ["Explore", "Compare", "About"]
+    tab_explore, tab_benchmark, tab_about = st.tabs(
+        ["Explore", "Benchmark", "About"]
     )
 
     with tab_explore:
         run_explore_frame()
 
-    with tab_compare:
-        run_compare_frame()
+    with tab_benchmark:
+        run_benchmark_frame()
 
     with tab_about:
         run_about_frame()

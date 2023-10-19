@@ -41,49 +41,76 @@ A preprocessed version of the dataset can be found
 Note that these time series can be uploaded in the `Explore` tab.
 """
 
-Baseline_desc =f"""
-In this experiment, we compare ***d_symb*** with 9 distance measures. 
+Baseline_desc = """
+In this experiment, we compare $d_{symb}$ with 9 existing distance measures. 
 These distances are specifically dedicated to time series.
 Their implementation can be found in the
 [aeon](https://www.aeon-toolkit.org/en/latest/api_reference/distances.html) Python package.
+All these distances are elastic as they can compare time series of different lengths.
 
-- [DTW](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.dtw_distance.html#aeon.distances.dtw_distance): Dynamic Time-Warping distance is the most widely used distance for time series. It compensates for misalignment issues by considering the best match for each pair of time series points.
-- [DDTW](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.ddtw_distance.html): Derivative DTW distance is similar to DTW distance, but consider the first order derivative of the original time series.
-- [WDTW](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.wdtw_distance.html#aeon.distances.wdtw_distance): Weighted DTW distance is similar to DTW distance but weights nearer neighbors more heavily depending on the time difference.
-- [WDDTW](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.wddtw_distance.html#aeon.distances.wddtw_distance): Weighted Derivative DTW distance is computing the WDTW on the first order derivative of the time series.
-- [MSM](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.msm_distance.html#aeon.distances.msm_distance): Move-Split-Merge computes similarity by measuring the cost to transform one series into another using a predefined set of operations.
-- [LCSS](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.lcss_distance.html#aeon.distances.lcss_distance): LCSS distance is using the Longest common subsequence of the two time series to measure their similarity.
-- [ERP](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.erp_distance.html#aeon.distances.erp_distance): Edit Real Penalty distance is similar to DTW distance, but allows gaps of points with no match that are then penalized based on their distance to a predefined value.
-- [EDR](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.edr_distance.html#aeon.distances.edr_distance): Edit Distance on Real Sequences computes the minimum number of points that have to be deleted from the time series such that the sum of the distance between the remaining time series points is smaller than a predefined threshold.
-- [TWE](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.twe_distance.html#aeon.distances.twe_distance): Time Warp Edit distance is combining both DTW and Edit distance.
-
-- [d_symb](): TODO
+- [DTW (Dynamic Time-Warping)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.dtw_distance.html#aeon.distances.dtw_distance):
+DTW is the most popular elastic distance.
+DTW can perform warping, meaning one-to-many alignment between samples of two
+time series.
+- [DDTW (Derivative DTW)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.ddtw_distance.html):
+DDTW applies DTW, not directly on the raw signals, but on their first derivative
+in order to prevent unnatural warpings when there is variability in the signals.
+- [WDTW (Weighted DTW)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.wdtw_distance.html#aeon.distances.wdtw_distance):
+Compated to DTW, WDTW aims at avoiding large warpings by penalizing them using a non-linear multiplicative weight.
+- [WDDTW (Weighted Derivative DTW)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.wddtw_distance.html#aeon.distances.wddtw_distance):
+WDDTW combines DDTW and WDTW.
+- [LCSS (Longest Common SubSequence)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.lcss_distance.html#aeon.distances.lcss_distance):
+Initially, LCSS is an edit distance defined on strings, allowing only insertions
+and deletions of characters.
+It measures the length of the longest pairing of characters that can be between
+both strings, so that the pairings respect the order of the letters.
+It has been extended to the real-valued case thanks to a threshold.
+- [EDR (Edit Distance on Real sequence)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.edr_distance.html#aeon.distances.edr_distance):
+EDR is based on the Levenshtein distance on strings that allows substitution,
+insertions and deletions.
+Rather than using a delete operation, EDR considers a deletion in a time series
+as a special symbol in another series.
+- [ERP (Edit distance with Real Penalty)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.erp_distance.html#aeon.distances.erp_distance):
+ERP is close to EDR, except that ERP called the delete operation a gap element
+and has penalty parameter.
+- [MSM (Move-Split-Merge)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.msm_distance.html#aeon.distances.msm_distance):
+MSM is inspired by edit distances on strings.
+MSM states that, contrary to ERP, it has the particularity of being invariant to translations.
+It allows three operations: move (substitution), split (duplication), and
+merge (contraction).
+- [TWE (Time Warp Edit distances)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.twe_distance.html#aeon.distances.twe_distance):
+TWE is based on the edit distance on strings, however it has no straightforward
+equivalent on strings.
+Indeed, TWE combines (non-elastic) $L_p$ norms with the (elastic) edit distance.
+- [$d_{symb}$](https://github.com/sylvaincom/d-symb): $d_{symb}$ first symbolizes
+each multivariate time series into a univariate symbolic sequence, then uses
+a distance measure defined on strings, inspired from the general edit distance,
+to compare the obtained symbolic sequences.
 """
 
 compare_text_1 = """
 
-## Benchmark the $d_{symb}$ distance measure.
+## Benchmark the $d_{symb}$ distance measure on the clustering task
 
 We now illustrate the relevance of the $d_{symb}$ distance measure, compared
 to other existing ones, on a real-world use case.
 We apply our benchmark to the
 [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) 
-with the goal of identify surgeons' gestures based on kinematic time series.
+with the goal of identifying surgeons' gestures based on kinematic time series.
 These signals are generated when using robotic arms and grippers to perform surgical tasks.
 All results are pre-computed (in order to save you the computing time).
 """
 
-compare_text_2 = f"""
+compare_text_2 = """
 
-### Explore the distance measures' results.
+### Explore the distance measures' results
 
 In this dataset, we consider two surgical gestures: ***Knot Tying*** (39 multivariate time series) 
 and ***Needle Passing*** (40 multivariate time series).
 The goal is to cluster (using an agglomerative clustering approach with complete
 linkage) and identify these two gestures, each time for several distance measures.
 In the following, we display the pairwise distance matrices corresponding to several
-distance measures, as well as the clustering performances
-(using 8 evaluation measures) and the execution time (in seconds).
-
-
+distance measures, as well as the clustering performances and the execution time (in seconds).
+In total, 9 distance measures are used in the benchmark, apart from $d_{symb}$.
+Distance measures are described in the `Baselines description` tab.
 """

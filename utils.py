@@ -546,6 +546,9 @@ def run_explore_frame():
         """
         Upload your data set of (multivariate) time series: each time series
         must be in a `.csv` file with the shape `(n_timestamps, n_dim)`.
+        For example, a preprocessed version of the JIGSAWS dataset
+        (described in the `Benchmark` tab) can be found
+        [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX).
         """
     )
 
@@ -556,7 +559,7 @@ def run_explore_frame():
     gc.collect()
 
 
-def run_compare_frame():
+def run_benchmark_frame():
     st.markdown(compare_text_1)
 
     tab_data_desc, tab_baseline_desc = st.tabs(
@@ -600,7 +603,7 @@ def run_compare_frame():
         d_replace_distance_inv[value] = key
     list_distances = list(d_replace_distance_inv.keys())
 
-    dist_name = st.selectbox("Choose a distance measure:", list_distances)
+    dist_name = st.selectbox("Choose a distance measure to investigate:", list_distances)
     dist_abb = d_replace_distance_inv[dist_name]
 
     fig_mat = plot_matrix(
@@ -612,7 +615,7 @@ def run_compare_frame():
 
     st.plotly_chart(fig_mat, use_container_width=True)
 
-    st.markdown("#### Explore the clustering performances.")
+    st.markdown("#### Explore the clustering performances")
 	
     fig_time = px.bar(
         df_exectime.T.rename(columns=d_replace_distance).T,
