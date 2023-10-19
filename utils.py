@@ -387,7 +387,7 @@ def get_data_step():
 
 def Visualize_step():
     if len(st.session_state.ALL_TS) >= 1:
-        n_symbols = st.slider("Choose the number of symbols:", 0, 25, 5)
+        n_symbols = st.slider("Select the number of symbols to represent your time series using $d_{symb}$:", 2, 25, 5)
         
         st.markdown(
             """
@@ -541,26 +541,19 @@ def Visualize_step():
                 st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
-	st.markdown("## Explore and gain insights on your data set thanks to the $d_{symb}$ symbolization")
-	st.markdown(
+    st.markdown("## Explore and gain insights on your data set thanks to the $d_{symb}$ symbolization")
+    st.markdown(
         """
         Upload your data set of (multivariate) time series: each time series
         must be in a `.csv` file with the shape `(n_timestamps, n_dim)`.
         """
     )
 
-	get_data_step()
-     
-	st.markdown(
-        """
-        Select the number of symbols to represent your time series using
-        $d_{symb}$.
-        """
-    )
+    get_data_step()
 
-	Visualize_step()
-
-	gc.collect()
+    Visualize_step()
+    
+    gc.collect()
 
 
 def run_compare_frame():
