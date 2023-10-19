@@ -53,7 +53,7 @@ analysis.
 * [Charles Truong](https://charles.doffy.net/) (Centre Borelli, ENS Paris-Saclay)
 * [Laurent Oudre](http://www.laurentoudre.fr/) (Centre Borelli, ENS Paris-Saclay)
 
-<img width="500" src="./figures/cebo_logos.png"/>
+<img width="700" src="./figures/cebo_logos.png"/>
 
 ## Usage
 
