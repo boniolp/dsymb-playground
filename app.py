@@ -27,20 +27,22 @@ def run():
     st.write("# Welcome to the $d_{symb}$ playground!")
     st.markdown(
         """
-        Interpret and compare your multivariate time series data set using
-        the $d_{symb}$ symbolic representation.
-        $d_{symb}$ transforms a multivariate time series into an
-        interpretable univariate symbolic sequence.
-        The $d_{symb}$ representation comes with a distance measure defined
-        on the obtained symbolic sequences.
+        Swiftly interpret and compare your multivariate time series data set
+        using $d_{symb}$.
+        $d_{symb}$ transforms a multivariate time series into an interpretable
+        univariate symbolic sequence, and comes with an efficient distance
+        measure defined on the obtained symbolic sequences.
         1. Use the `Explore` tab to interpret the $d_{symb}$ symbolization.
         Visualize your raw time series along with their $d_{symb}$
         symbolization: the colorbars' corresponding to
         all symbolic sequences, and the $d_{symb}$ pairwise distance matrix
         between the symbolic sequences.
+        With a single glance at the color bars, the symbolization provides an
+        immediate and comprehensive undestanding of your data.
         2. Use the `Compare` tab to assess the relevance of the $d_{symb}$
         distance measure, with regards to other distance measures, on the
-        JIGSAWS data set (all results are precomputed).
+        JIGSAWS data set.
+        For computational reasons of the benchmark, all results are precomputed.
         """
     )
 

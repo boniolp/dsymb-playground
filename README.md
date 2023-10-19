@@ -2,7 +2,7 @@
 <img width="230" src="./figures/Symbol_logo.png"/>
 </p>
 
-<h1 align="center">Symbol</h1>
+<h1 align="center">$d_{symb}$ playground</h1>
 <h2 align="center">A fast interactive exploration of multivariate time series datasets</h2>
 
 <div align="center">
@@ -20,20 +20,17 @@ $d_{symb}$ playground is a Python-based web interactive tool to visualize, explo
 
 ### Reference
 
-> "dsymb: "<br/>
-> Authors<br/>
-> Proceedings of XXX, pages XXX-XXX, 2023<br/>
+> "An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals"<br/>
+> Authors: Sylvain W. Combettes, Charles Truong and Laurent Oudre<br/>
+> _Proceedings of the International Conference on Data Mining (AI4TS Workshop) (to appear)_, Shanghai, China, 2023.<br/>
 
 ```bibtex
-@article{symbol,
+@inproceedings{2023_combettes_dsymb_icdm,
   title={An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals},
   author={Sylvain W. Combettes and Charles Truong and Laurent Oudre},
-  journal={(to appear)},
-  volume={},
-  number={},
-  pages={},
+  booktitle={Proceedings of the International Conference on Data Mining (AI4TS Workshop) (to appear)},
   year={2023},
-  publisher={}
+  url={http://www.laurentoudre.fr/publis/ICDM2023.pdf}
 }
 ```
 
