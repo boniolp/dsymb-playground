@@ -36,7 +36,7 @@ def run():
         Visualize your raw time series along with their $d_{symb}$
         symbolization using the colorbars.
         With a single glance at the color bars, the symbolization provides an
-        immediate and comprehensive undestanding of your data.
+        immediate and comprehensive understanding of your data.
         You can also visualize the $d_{symb}$ pairwise distance matrix
         between the symbolic sequences.
         2. Use the `Benchmark` tab to assess the relevance of the $d_{symb}$
