@@ -45,7 +45,7 @@ def plot_matrix(distance_arr, distance_name=""):
     fig = px.imshow(
         distance_arr,
         aspect="auto",
-        title=f"Parwise distance matrix between time series using {distance_name}",
+        title=f"Pairwise distance matrix between time series using {distance_name}",
     )
     fig.update_xaxes(title_text="Times series index")
     fig.update_yaxes(title_text="Times series index")
@@ -644,6 +644,7 @@ def run_benchmark_frame():
     dist_name = st.selectbox(
         "Choose a distance measure to investigate:", list_distances
     )
+    st.markdown("*Note*: For $d_{symb}$, the number of symbols is fixed to 5.")
     dist_abb = d_replace_distance_inv[dist_name]
 
     fig_mat = plot_matrix(

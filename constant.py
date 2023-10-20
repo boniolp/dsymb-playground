@@ -49,7 +49,7 @@ Note that these time series can be uploaded in the `Explore` tab.
 """
 
 Baseline_desc = """
-In this experiment, we compare $d_{symb}$ with 9 existing distance measures. 
+In this experiment, we compare $d_{symb}$ with 9 existing distance measures.
 These distances are specifically dedicated to time series.
 Their implementation can be found in the
 [aeon](https://www.aeon-toolkit.org/en/latest/api_reference/distances.html) Python package.
