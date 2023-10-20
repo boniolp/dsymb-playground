@@ -284,7 +284,7 @@ def plot_cluster_centers(centroids, n_symbols):
 
 
 def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
-	"""Plot the univariate symbolic sequence as well as the multivariate
+	"""Plot the symbolic sequence as well as the multivariate
     time series.
     """
 
@@ -312,7 +312,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
 		for key in sorted(tmp_df["segment_symbol"].unique().tolist())
 	}
      
-	# Create the Gantt chart for the univariate symbolic sequence
+	# Create the Gantt chart for the symbolic sequence
 	fig_symb = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
@@ -334,7 +334,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
 		cols=1,
         shared_xaxes=True,
         subplot_titles=(
-            "Univariate symbolic sequence",
+            "Symbolic sequence (for all dimensions)",
             "",
             "Multivariate time series, dimension by dimension"
         )
@@ -363,7 +363,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
         xaxis_type="linear",
         height=min(2000, n_dim * 52),
         showlegend=False,
-        title="Chosen multivariate time series along with its univariate symbolic sequence."
+        title="Chosen multivariate time series along with its symbolic sequence."
     )
      
 	st.plotly_chart(fig, use_container_width=True)
@@ -392,7 +392,7 @@ def Visualize_step():
         st.markdown(
             """
 			Then, use the `Single time series` tab to visualize your chosen raw
-            multivariate time series along with its univariate symbolic
+            multivariate time series along with its symbolic
             representation.
 			Use the `Data set of time series` tab to explore and interpret
             your data set with only one glance using the $d_{symb}$ colorbars.
@@ -462,7 +462,7 @@ def Visualize_step():
                     First of all, let us visualize the whole data set of
                     multivariate time series at once.
                     In the following color bars, each row is a color bar
-                    corresponding to the univariate symbolic sequence of a
+                    corresponding to the symbolic sequence of a
                     multivariate time series.
                     """
 				)

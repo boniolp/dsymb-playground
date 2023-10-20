@@ -30,7 +30,7 @@ def run():
         :technologist: :zap: Swiftly interpret and compare your multivariate time series data set
         using $d_{symb}$.
         $d_{symb}$ transforms a multivariate time series into an interpretable
-        univariate symbolic sequence, and comes with an efficient distance
+        symbolic sequence, and comes with an efficient distance
         measure defined on the obtained symbolic sequences.
         1. Use the `Explore` tab to interpret the $d_{symb}$ symbolization.
         Visualize your raw time series along with their $d_{symb}$

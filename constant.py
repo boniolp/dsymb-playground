@@ -83,7 +83,7 @@ TWE is based on the edit distance on strings, however it has no straightforward
 equivalent on strings.
 Indeed, TWE combines (non-elastic) $L_p$ norms with the (elastic) edit distance.
 - [$d_{symb}$](https://github.com/sylvaincom/d-symb): $d_{symb}$ first symbolizes
-each multivariate time series into a univariate symbolic sequence, then uses
+each multivariate time series into a symbolic sequence, then uses
 a distance measure defined on strings, inspired from the general edit distance,
 to compare the obtained symbolic sequences.
 """
