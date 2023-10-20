@@ -7,11 +7,11 @@
 
 <div align="center">
 <p>
-<img alt="GitHub" src="https://img.shields.io/github/license/boniolp/symbol"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/boniolp/symbol">
+<img alt="GitHub" src="https://img.shields.io/github/license/boniolp/dsymb-playground"> <img alt="GitHub issues" src="https://img.shields.io/github/issues/boniolp/dsymb-playground">
 </p>
 </div>
 
-<p align="center"><a href="https://symbol.streamlit.app/">Try our demo</a></p>
+<p align="center"><a href="https://dsymb-playground.streamlit.app/">Try our demo</a></p>
 <p align="center">
 <img width="500" src="./figures/demo_capture.gif"/>
 </p>
