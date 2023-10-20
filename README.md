@@ -59,15 +59,15 @@ analysis.
 **Step 1:** Clone this repository using `git` and change into its root directory.
 
 ```bash
-git clone https://github.com/boniolp/symbol.git
-cd symbol/
+git clone https://github.com/boniolp/dsymb-playground.git
+cd dsymb-playground/
 ```
 
 **Step 2:** Create and activate a `conda` environment and install the dependencies.
 
 ```bash
-conda env create -n symbol python=3.9
-conda activate symbol
+conda env create -n dsymb-playground python=3.9
+conda activate dsymb-playground
 pip install -r requirements.txt
 ```
 
