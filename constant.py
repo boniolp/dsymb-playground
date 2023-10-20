@@ -24,7 +24,7 @@ analysis.
 """
 
 
-data_JIGSAW=f"""
+data_JIGSAW = f"""
 The data series are recorded from the DaVinciSurgicalSystem.
 The multivariate data series are composed of ***76 dimensions***.
 Each dimension corresponds to a sensor (with an acquisition rate of 30 Hz).

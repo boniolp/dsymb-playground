@@ -50,12 +50,9 @@ class Segmentation(BaseEstimator):
         n_segments: int = 8,
         pen_factor: float = None,
     ) -> None:
-
         # Unit tests on the parameters:
 
-        err_msg = (
-            f"Choose 'uniform' or 'adaptive', not {uniform_or_adaptive}."
-        )
+        err_msg = f"Choose 'uniform' or 'adaptive', not {uniform_or_adaptive}."
         assert uniform_or_adaptive in ["uniform", "adaptive"], err_msg
 
         if uniform_or_adaptive == "uniform":
@@ -75,8 +72,7 @@ class Segmentation(BaseEstimator):
             assert mean_or_slope in ["mean", "slope"], err_msg
 
             err_msg = "Specify `n_segments` or `pen_factor`."
-            assert (n_segments is not None) or (
-                pen_factor is not None), err_msg
+            assert (n_segments is not None) or (pen_factor is not None), err_msg
 
             err_msg = "Specify either `n_segments` or `pen_factor`."
             assert (n_segments is None) or (pen_factor is None), err_msg
@@ -99,11 +95,13 @@ class Segmentation(BaseEstimator):
 
         if self.uniform_or_adaptive == "uniform":
             list_of_bkps = [
-                self.transform_uniform(multivariate_signal.shape[0]) for multivariate_signal in list_of_multivariate_signals
+                self.transform_uniform(multivariate_signal.shape[0])
+                for multivariate_signal in list_of_multivariate_signals
             ]
         elif self.uniform_or_adaptive == "adaptive":
             list_of_bkps = [
-                self.transform_adaptive(multivariate_signal) for multivariate_signal in list_of_multivariate_signals
+                self.transform_adaptive(multivariate_signal)
+                for multivariate_signal in list_of_multivariate_signals
             ]
 
         b_transform_segmentation = Bunch(
@@ -114,8 +112,7 @@ class Segmentation(BaseEstimator):
 
     def transform_uniform(self, n_samples):
         """Return list of equally spaced change-point indexes."""
-        bkps = np.linspace(
-            1, n_samples, num=self.n_segments + 1, dtype=int) - 1
+        bkps = np.linspace(1, n_samples, num=self.n_segments + 1, dtype=int) - 1
         bkps = bkps[1:]
         bkps[-1] = n_samples
         return bkps.flatten().tolist()
@@ -125,10 +122,14 @@ class Segmentation(BaseEstimator):
 
         if self.mean_or_slope == "slope":
             # BottomUp for slope
-            algo = rpt.BottomUp(model="clinear", jump=1).fit(multivariate_signal)
+            algo = rpt.BottomUp(model="clinear", jump=1).fit(
+                multivariate_signal
+            )
         elif self.mean_or_slope == "mean":
             # Dynp for mean
-            algo = rpt.KernelCPD(kernel="linear", jump=1).fit(multivariate_signal)
+            algo = rpt.KernelCPD(kernel="linear", jump=1).fit(
+                multivariate_signal
+            )
 
         if self.n_segments is not None:
             n_bkps = self.n_segments - 1

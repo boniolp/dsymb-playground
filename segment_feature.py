@@ -47,14 +47,13 @@ class SegmentFeature(BaseEstimator):
             "mean",
         ],
     ) -> None:
-
         # Check that all asked features are in ALL_FEATURE_NAMES
         for feature_name in features_names:
             err_msg = f"Choose an existing feature, not {feature_name}."
             assert feature_name in SegmentFeature.ALL_FEATURE_NAMES, err_msg
-        
+
         err_msg = "For now, you can only choose one feature."
-        assert len(features_names)==1, err_msg
+        assert len(features_names) == 1, err_msg
 
         self.features_names = features_names
 
@@ -66,25 +65,31 @@ class SegmentFeature(BaseEstimator):
         Signals are assumed to be multivariate.
         """
 
-        list_of_multivariate_signals = b_transform_segmentation.list_of_multivariate_signals
+        list_of_multivariate_signals = (
+            b_transform_segmentation.list_of_multivariate_signals
+        )
         list_of_bkps = b_transform_segmentation.list_of_bkps
         feature_name = self.features_names[0]
         list_of_df = list()
-        for (multivariate_signal_index, (multivariate_signal, bkps)) in enumerate(
+        for multivariate_signal_index, (multivariate_signal, bkps) in enumerate(
             zip(list_of_multivariate_signals, list_of_bkps)
         ):
-            features_for_single_multivariate_signal = self.transform_single_multivariate_signal(
-                multivariate_signal=multivariate_signal, bkps=bkps
+            features_for_single_multivariate_signal = (
+                self.transform_single_multivariate_signal(
+                    multivariate_signal=multivariate_signal, bkps=bkps
+                )
             )
-            features_for_single_multivariate_signal_df = pd.DataFrame(
-                features_for_single_multivariate_signal
-            ).add_prefix(
-                "dim_"
-            ).add_suffix(
-                f"_{feature_name}_feat"
+            features_for_single_multivariate_signal_df = (
+                pd.DataFrame(features_for_single_multivariate_signal)
+                .add_prefix("dim_")
+                .add_suffix(f"_{feature_name}_feat")
             )  # adding a prefix and a suffix to feature columns
-            features_for_single_multivariate_signal_df["signal_index"] = multivariate_signal_index
-            features_for_single_multivariate_signal_df["segment_start"] = [0] + bkps[:-1]
+            features_for_single_multivariate_signal_df[
+                "signal_index"
+            ] = multivariate_signal_index
+            features_for_single_multivariate_signal_df["segment_start"] = [
+                0
+            ] + bkps[:-1]
             features_for_single_multivariate_signal_df["segment_end"] = bkps
             features_for_single_multivariate_signal_df["segment_length"] = (
                 features_for_single_multivariate_signal_df.segment_end
@@ -94,9 +99,9 @@ class SegmentFeature(BaseEstimator):
         segment_features_df = pd.concat(list_of_df).reset_index(drop=True)
         if "length" in self.features_names:
             segment_features_df.insert(
-                len(self.features_names)-1,
+                len(self.features_names) - 1,
                 "length_feat",
-                segment_features_df["segment_length"].values
+                segment_features_df["segment_length"].values,
             )
         return segment_features_df
 
@@ -106,7 +111,9 @@ class SegmentFeature(BaseEstimator):
         Output is a list (of dict) of length n_segments."""
         features_for_single_signal = [
             np.mean(sub_multivariate_signal, axis=0)
-            for sub_multivariate_signal in np.split(multivariate_signal, bkps[:-1])
+            for sub_multivariate_signal in np.split(
+                multivariate_signal, bkps[:-1]
+            )
         ]
         return features_for_single_signal
 
@@ -124,7 +131,8 @@ class SegmentFeature(BaseEstimator):
             dict_of_features["max"] = self.get_max(sub_signal)
         if "mean_of_min_max" in self.features_names:
             dict_of_features["mean_of_min_max"] = self.get_mean_of_min_max(
-                sub_signal)
+                sub_signal
+            )
         if "variance" in self.features_names:
             dict_of_features["variance"] = self.get_var(sub_signal)
         if "slope" in self.features_names:
@@ -178,7 +186,9 @@ class SegmentFeature(BaseEstimator):
         """From the CSAX paper, equation 6 and not equation 5.
         TO BE UPDATED TO MULTIVARIATE SETTING.
         """
-        return (np.sqrt((np.diff(sub_signal) ** 2).sum())) / (len(sub_signal)-1)
+        return (np.sqrt((np.diff(sub_signal) ** 2).sum())) / (
+            len(sub_signal) - 1
+        )
 
     @staticmethod
     def get_linear_residuals(sub_signal):

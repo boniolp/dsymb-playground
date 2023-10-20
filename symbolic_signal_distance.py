@@ -3,6 +3,7 @@ from sklearn.utils import Bunch
 from weighted_levenshtein import lev
 from sklearn.base import BaseEstimator
 
+
 class SymbolicSignalDistance(BaseEstimator):
     """
     Computes the distance between symbolic signals.
@@ -44,7 +45,6 @@ class SymbolicSignalDistance(BaseEstimator):
         n_samples: int = 100,
         weighted_bool: bool = True,
     ) -> None:
-
         # Unit tests on the parameters:
 
         err_msg = f"Choose an existing distance type, not {distance}."
@@ -112,7 +112,7 @@ class SymbolicSignalDistance(BaseEstimator):
         assert word_length_1 == word_length_2, err_msg
 
         sum_cells = 0
-        for (symbol_1, symbol_2) in zip(symb_signal_1, symb_signal_2):
+        for symbol_1, symbol_2 in zip(symb_signal_1, symb_signal_2):
             sum_cells += (lookup_table[symbol_1][symbol_2]) ** 2
         symb_signals_dist = np.sqrt(self.n_samples / word_length_1) * np.sqrt(
             sum_cells
@@ -170,7 +170,7 @@ class SymbolicSignalDistance(BaseEstimator):
         substitute_costs = np.ones((128, 128), dtype=np.float64)
         n_symbols = lookup_table.shape[0]
         substitute_costs[
-            ord("A"): ord("A") + n_symbols, ord("A"): ord("A") + n_symbols
+            ord("A") : ord("A") + n_symbols, ord("A") : ord("A") + n_symbols
         ] = lookup_table.astype(np.float64)
 
         # Scale up the insert and delete costs:
@@ -195,9 +195,9 @@ class SymbolicSignalDistance(BaseEstimator):
         """
         n_signals = len(list_of_signals)
         distance_matrix = np.zeros((n_signals, n_signals), dtype=float)
-        for (i_row, signal_1) in enumerate(list_of_signals):
-            for (i_column, signal_2) in enumerate(
-                list_of_signals[i_row + 1:], start=i_row + 1
+        for i_row, signal_1 in enumerate(list_of_signals):
+            for i_column, signal_2 in enumerate(
+                list_of_signals[i_row + 1 :], start=i_row + 1
             ):
                 distance_matrix[i_row, i_column] = metric(
                     signal_1, signal_2, *args, **kwargs
@@ -219,8 +219,8 @@ class SymbolicSignalDistance(BaseEstimator):
         distance_matrix = np.zeros(
             (n_test_signals, n_train_signals), dtype=float
         )
-        for (i_row, test_signal) in enumerate(list_of_test_signals):
-            for (i_column, train_signal) in enumerate(list_of_train_signals):
+        for i_row, test_signal in enumerate(list_of_test_signals):
+            for i_column, train_signal in enumerate(list_of_train_signals):
                 distance_matrix[i_row, i_column] = metric(
                     test_signal, train_signal, *args, **kwargs
                 )
