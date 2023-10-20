@@ -2,7 +2,7 @@
 <img width="230" src="./figures/Symbol_logo.png"/>
 </p>
 
-<h1 align="center">d_symb playground</h1>
+<h1 align="center">dsymb playground</h1>
 <h2 align="center">A fast interactive exploration of multivariate time series datasets</h2>
 
 <div align="center">
