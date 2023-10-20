@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 **Step 3:** You can use our tool in two different ways: 
 
-- Access online: https://symbol.streamlit.app/
+- Access online: https://dsymb-playground.streamlit.app/
 - Run locally (preferable for large time series datasets). To do so, run the following command:
 
 ```bash
