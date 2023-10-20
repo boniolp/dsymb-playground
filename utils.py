@@ -541,7 +541,7 @@ def Visualize_step():
                 st.plotly_chart(fig, use_container_width=True)
 
 def run_explore_frame():
-    st.markdown("## Explore and gain insights on your data set thanks to the $d_{symb}$ symbolization")
+    st.markdown("## Explore your dataset with $d_{symb}$ symbolization")
     st.markdown(
         """
         Upload your data set of (multivariate) time series: each time series
