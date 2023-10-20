@@ -353,7 +353,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
                 x=list(range(len(ts))),
                 y=ts[:, i],
                 mode="lines",
-                line=dict(color="white", width=1),
+                line=dict(color="white", width=1),  # white or black
             ),
             row=i_row + 3,
             col=1,
@@ -399,14 +399,14 @@ def Visualize_step():
 
         st.markdown(
             """
-			Then, use the `Individual analysis` tab to visualize your chosen raw
+        	Then, use the `Individual analysis` tab to visualize your chosen raw
             multivariate time series along with its symbolic
             representation.
-			Use the `Dataset analysis` tab to explore and interpret
+        	Use the `Dataset analysis` tab to explore and interpret
             your dataset with only one glance using the $d_{symb}$ colorbars.
-			It also provides some insights on your symbolization to help you
-			interpret a symbol as a real-world event in your data.
-			"""
+        	It also provides some insights on your symbolization to help you
+        	interpret a symbol as a real-world event in your data.
+        	"""
         )
 
         D1, df_temp, lookup_table, centroids = dsym(
@@ -416,32 +416,41 @@ def Visualize_step():
             ["Individual analysis", "Dataset analysis"]
         )
         with tab_indiv:
-            time_series_selected = st.selectbox(
-                "Choose the index of a single time series :",
-                list(range(len(st.session_state.ALL_TS))),
-            )
-            range_dims = [
-                [20 * dim_s, 20 * (dim_s + 1)]
-                for dim_s in range(
-                    len(st.session_state.ALL_TS[time_series_selected][0]) // 20
+            col1, col2 = st.columns(2)
+            with col1:
+                time_series_selected = st.selectbox(
+                    "Choose the index of a single time series :",
+                    list(range(len(st.session_state.ALL_TS))),
                 )
-            ]
-            if range_dims[-1][1] < len(
-                st.session_state.ALL_TS[time_series_selected][0]
-            ):
-                range_dims += [
-                    [
-                        range_dims[-1][1],
-                        len(st.session_state.ALL_TS[time_series_selected][0]),
-                    ]
+                range_dims = [
+                    [20 * dim_s, 20 * (dim_s + 1)]
+                    for dim_s in range(
+                        len(st.session_state.ALL_TS[time_series_selected][0])
+                        // 20
+                    )
                 ]
-            range_dims += [
-                [0, len(st.session_state.ALL_TS[time_series_selected][0])]
-            ]
-            dims = st.selectbox(
-                "Choose the dimensions' range (for conciseness purposes):",
-                range_dims,
-            )
+                if len(range_dims) > 0:
+                    if range_dims[-1][1] < len(
+                        st.session_state.ALL_TS[time_series_selected][0]
+                    ):
+                        range_dims += [
+                            [
+                                range_dims[-1][1],
+                                len(
+                                    st.session_state.ALL_TS[
+                                        time_series_selected
+                                    ][0]
+                                ),
+                            ]
+                        ]
+                range_dims += [
+                    [0, len(st.session_state.ALL_TS[time_series_selected][0])]
+                ]
+            with col2:
+                dims = st.selectbox(
+                    "Choose the dimensions' range (for conciseness purposes):",
+                    range_dims,
+                )
             plot_time_series(
                 ts=st.session_state.ALL_TS[time_series_selected],
                 tmp_df=df_temp.loc[
@@ -570,7 +579,7 @@ def Visualize_step():
 
 
 def run_explore_frame():
-    st.markdown("## Explore your dataset with $d_{symb}$ symbolization")
+    st.markdown("## Explore your dataset with the $d_{symb}$ symbolization")
     st.markdown(
         """
         Upload your dataset of (multivariate) time series: each time series

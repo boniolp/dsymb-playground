@@ -24,7 +24,7 @@ def run():
     if "ALL_TS" not in st.session_state:
         st.session_state["ALL_TS"] = []
 
-    st.write("# Welcome to $d_{symb}$ playground!")
+    st.write("# Welcome to the $d_{symb}$ playground!")
     st.markdown(
         """
         :technologist: :zap: Swiftly interpret and compare your multivariate time series dataset
