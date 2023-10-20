@@ -32,7 +32,7 @@ from dsymb import *
 
 @st.cache_data(ttl=3600, max_entries=1, show_spinner=False)
 def preprocess_data(uploaded_ts):
-    with st.spinner("Preprocessing your data set..."):
+    with st.spinner("Preprocessing your dataset..."):
         all_ts = []
         for ts in uploaded_ts:
             all_ts.append(np.genfromtxt(ts, delimiter=","))
@@ -107,7 +107,7 @@ def plot_symbolization(df_temp, mode, n_symbols):
         height=max(400, n_signals * 20),
         xaxis_title="Time stamp",
         yaxis_title="Symbolic sequence index",
-        title_text="Colorbars of all symbolic sequences in the data set",
+        title_text="Colorbars of all symbolic sequences in the dataset",
         legend=dict(title=dict(text="Symbol")),
     )
     return fig
@@ -183,7 +183,9 @@ def plot_symbol_distr(df_temp, mode, n_symbols):
 
     fig.update_xaxes(title_text="Time stamp", row=n_symbols, col=1)
     for i in range(0, len(list_of_actual_symbols_str_sorted)):
-        fig.update_yaxes(title_text="Occurrence", row=i + 1, col=1)
+        fig.update_yaxes(
+            title_text="Occurrence", showticklabels=False, row=i + 1, col=1
+        )
     fig.update_layout(
         xaxis_type="linear",
         height=max(300, n_symbols * 120),
@@ -200,6 +202,7 @@ def plot_dendrogram(centroids):
         xaxis_title="Symbol",
         yaxis_title="Distance between symbols",
         title="Dendrogram",
+        margin=dict(r=10),
     )
     return fig
 
@@ -358,6 +361,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
 
     # Layout
     fig.update_xaxes(title_text="Time stamp", row=n_dim + 2, col=1)
+    fig.update_yaxes(showticklabels=False, row=1, col=1)
     fig.update_layout(
         xaxis_type="linear",
         height=min(2000, n_dim * 52),
@@ -395,11 +399,11 @@ def Visualize_step():
 
         st.markdown(
             """
-			Then, use the `Single time series` tab to visualize your chosen raw
+			Then, use the `Individual analysis` tab to visualize your chosen raw
             multivariate time series along with its symbolic
             representation.
-			Use the `Data set of time series` tab to explore and interpret
-            your data set with only one glance using the $d_{symb}$ colorbars.
+			Use the `Dataset analysis` tab to explore and interpret
+            your dataset with only one glance using the $d_{symb}$ colorbars.
 			It also provides some insights on your symbolization to help you
 			interpret a symbol as a real-world event in your data.
 			"""
@@ -409,7 +413,7 @@ def Visualize_step():
             st.session_state.ALL_TS, n_symbols
         )
         tab_indiv, tab_all = st.tabs(
-            ["Single time series", "Data set of time series"]
+            ["Individual analysis", "Dataset analysis"]
         )
         with tab_indiv:
             time_series_selected = st.selectbox(
@@ -468,14 +472,14 @@ def Visualize_step():
                     horizontal=True,
                 )
 
-                st.markdown("### Overview of your symbolized data set")
+                st.markdown("### Overview of your symbolized dataset")
 
                 fig = plot_symbolization(
                     df_temp, mode=mode_length, n_symbols=n_symbols
                 )
                 st.markdown(
                     """
-                    First of all, let us visualize the whole data set of
+                    First of all, let us visualize the whole dataset of
                     multivariate time series at once.
                     In the following color bars, each row is a color bar
                     corresponding to the symbolic sequence of a
@@ -486,7 +490,7 @@ def Visualize_step():
 
                 st.markdown(
                     """
-                    ### Insights on the symbolization of your data set
+                    ### Insights on the symbolization of your dataset
                     
                     Now, let us provide some insights on your symbolization to
                     help you interpret a symbol as a real-world event in your data.
@@ -494,7 +498,7 @@ def Visualize_step():
                 )
                 st.markdown(
                     """
-                    Which symbols occur more often (out of the whole data set)?
+                    Which symbols occur more often (out of the whole dataset)?
                     Which symbols represent more recurring events?
                     """
                 )
@@ -569,7 +573,7 @@ def run_explore_frame():
     st.markdown("## Explore your dataset with $d_{symb}$ symbolization")
     st.markdown(
         """
-        Upload your data set of (multivariate) time series: each time series
+        Upload your dataset of (multivariate) time series: each time series
         must be in a `.csv` file with the shape `(n_timestamps, n_dim)`.
         For example, a preprocessed version of the JIGSAWS dataset
         (described in the `Benchmark` tab) can be found
@@ -588,7 +592,7 @@ def run_benchmark_frame():
     st.markdown(compare_text_1)
 
     tab_data_desc, tab_baseline_desc = st.tabs(
-        ["Data set description", "Baselines description"]
+        ["Dataset description", "Baselines description"]
     )
 
     with tab_data_desc:
@@ -617,8 +621,8 @@ def run_benchmark_frame():
         "wdtw_dep": "WDTW dependent",
         "wddtw_dep": "WDDTW dependent",
         "lcss": "LCSS",
-        "erp": "ERP",
         "edr": "EDR",
+        "erp": "ERP",
         "msm": "MSM",
         "twe": "TWE",
         "dsymb": "d_symb",
@@ -644,9 +648,14 @@ def run_benchmark_frame():
 
     st.markdown("#### Explore the clustering performances")
 
+    df_exectime_plot = df_exectime.T.rename(columns=d_replace_distance).T
     fig_time = px.bar(
-        df_exectime.T.rename(columns=d_replace_distance).T,
+        df_exectime_plot,
         labels={"distance": "distance measure", "value": "execution time"},
+    )
+    fig_time.update_xaxes(
+        categoryorder="array",
+        categoryarray=list_distances,
     )
     fig_time.update_yaxes(
         type="log",
@@ -674,9 +683,9 @@ def run_benchmark_frame():
         yaxis_title="Clustering performance evaluation",
         legend=dict(title=dict(text="Evaluation metric")),
     )
-    fig_time.update_xaxes(
+    fig_acc.update_xaxes(
         categoryorder="array",
-        categoryarray=list(d_replace_distance_inv.keys()),
+        categoryarray=list_distances,
     )
     st.plotly_chart(fig_acc, use_container_width=True)
 

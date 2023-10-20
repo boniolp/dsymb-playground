@@ -2,10 +2,10 @@ about_text = """
 ## Fast interactive exploration of multivariate time series datasets
 
 $d_{symb}$ playground is a Python-based web interactive tool to interpet and
-compare large multivariate time series data sets.
+compare large multivariate time series datasets.
 It is based on a novel symbolic representation, called $d_{symb}$, for
 multivariate time series.
-$d_{symb}$ allows to visualize a data set of multivariate time series with
+$d_{symb}$ allows to visualize a dataset of multivariate time series with
 a single glance, thus to quickly gain insights on your data.
 $d_{symb}$ also comes with a compatible distance measure to compare the
 obtained symbolic sequences.
@@ -15,12 +15,19 @@ Indeed, comparing a dataset of 80 time series (with 80 dimensions
 and 5,000 timestamps) requires 20 seconds instead of 2,000 seconds for DTW-based
 analysis.
 
-## Contributors
+### Contributors
 
 * [Sylvain W. Combettes](https://sylvaincom.github.io/) (Centre Borelli, ENS Paris-Saclay)
 * [Paul Boniol](https://boniolp.github.io/) (Centre Borelli, ENS Paris-Saclay)
 * [Charles Truong](https://charles.doffy.net/) (Centre Borelli, ENS Paris-Saclay)
 * [Laurent Oudre](http://www.laurentoudre.fr/) (Centre Borelli, ENS Paris-Saclay)
+
+### Acknowledgment
+
+S. W. Combettes is supported by the IDAML chair of ENS Paris-Saclay, and by a public grant overseen by the French National Research Agency (ANR) through the program UDOPIA, project funded by the ANR-20-THIA-0013-01.
+P. Boniol is funded by SaclAI School.
+C. Truong is funded by the PhLAMES chair of ENS Paris-Saclay.
+Part of the computations has been executed on Atos Edge computer, funded by the IDAML chair of ENS Paris-Saclay.
 """
 
 
@@ -48,6 +55,15 @@ Their implementation can be found in the
 [aeon](https://www.aeon-toolkit.org/en/latest/api_reference/distances.html) Python package.
 All these distances are elastic as they can compare time series of different lengths.
 
+In order to extend DTW to multivariate time series, the dependent strategy
+considers the multivariate series as a single series in which each timestamp is
+associated to a single multidimensional point.
+The DTW scheme is then applied using Euclidean distances between the multidimensional
+points of the two series.
+We refer in interested reader to the following recent review:
+> Shifaz, A., Pelletier, C., Petitjean, F. et al. Elastic similarity and distance measures for multivariate time series. Knowl Inf Syst 65, 2665–2698 (2023). https://doi.org/10.1007/s10115-023-01835-4
+
+In the following, we focus only on the dependent strategy for each distance measure.
 - [DTW (Dynamic Time-Warping)](https://www.aeon-toolkit.org/en/latest/api_reference/auto_generated/aeon.distances.dtw_distance.html#aeon.distances.dtw_distance):
 DTW is the most popular elastic distance.
 DTW can perform warping, meaning one-to-many alignment between samples of two
@@ -111,6 +127,6 @@ The goal is to cluster (using an agglomerative clustering approach with complete
 linkage) and identify these two gestures, each time for several distance measures.
 In the following, we display the pairwise distance matrices corresponding to several
 distance measures, as well as the clustering performances and the execution time (in seconds).
-In total, 9 distance measures are used in the benchmark, apart from $d_{symb}$.
+In total, 9 distance measures are used in the benchmark, in addition to $d_{symb}$.
 Distance measures are described in the `Baselines description` tab.
 """

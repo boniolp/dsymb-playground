@@ -27,7 +27,7 @@ def run():
     st.write("# Welcome to $d_{symb}$ playground!")
     st.markdown(
         """
-        :technologist: :zap: Swiftly interpret and compare your multivariate time series data set
+        :technologist: :zap: Swiftly interpret and compare your multivariate time series dataset
         using $d_{symb}$.
         $d_{symb}$ transforms a multivariate time series into an interpretable
         symbolic sequence, and comes with an efficient distance
@@ -41,7 +41,7 @@ def run():
         between the symbolic sequences.
         2. Use the `Benchmark` tab to assess the relevance of the $d_{symb}$
         distance measure, with regards to 9 other distance measures, on the
-        JIGSAWS data set.
+        JIGSAWS dataset.
         In particular, $d_{symb}$ is much faster than existing methods.
         For computational reasons of the benchmark, all results are precomputed.
         """

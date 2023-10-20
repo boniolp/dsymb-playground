@@ -17,10 +17,10 @@
 </p>
 
 $d_{symb}$ playground is a Python-based web interactive tool to interpet and
-compare large multivariate time series data sets.
+compare large multivariate time series datasets.
 It is based on a novel symbolic representation, called $d_{symb}$, for
 multivariate time series.
-$d_{symb}$ allows to visualize a data set of multivariate time series with
+$d_{symb}$ allows to visualize a dataset of multivariate time series with
 a single glance, thus to quickly gain insights on your data.
 $d_{symb}$ also comes with a compatible distance measure to compare the
 obtained symbolic sequences.
@@ -53,7 +53,6 @@ analysis.
 * [Charles Truong](https://charles.doffy.net/) (Centre Borelli, ENS Paris-Saclay)
 * [Laurent Oudre](http://www.laurentoudre.fr/) (Centre Borelli, ENS Paris-Saclay)
 
-
 ## Usage
 
 **Step 1:** Clone this repository using `git` and change into its root directory.
@@ -82,6 +81,13 @@ streamlit run app.py
 
 You can then open the app using your web browser. You can upload any kind of time series (one file per time series) with the shape `(n_timestamps, n_dims)`.
 A preprocessed version of the dataset [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX).
+
+## Acknowledgment
+
+S. W. Combettes is supported by the IDAML chair of ENS Paris-Saclay, and by a public grant overseen by the French National Research Agency (ANR) through the program UDOPIA, project funded by the ANR-20-THIA-0013-01.
+P. Boniol is funded by SaclAI School.
+C. Truong is funded by the PhLAMES chair of ENS Paris-Saclay.
+Part of the computations has been executed on Atos Edge computer, funded by the IDAML chair of ENS Paris-Saclay.
 
 <p align="center">
 <img width="700" src="./figures/cebo_logos.png"/>
