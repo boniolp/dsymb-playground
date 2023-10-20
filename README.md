@@ -53,7 +53,6 @@ analysis.
 * [Charles Truong](https://charles.doffy.net/) (Centre Borelli, ENS Paris-Saclay)
 * [Laurent Oudre](http://www.laurentoudre.fr/) (Centre Borelli, ENS Paris-Saclay)
 
-<img width="700" src="./figures/cebo_logos.png"/>
 
 ## Usage
 
@@ -84,4 +83,6 @@ streamlit run app.py
 You can then open the app using your web browser. You can upload any kind of time series (one file per time series) with the shape `(n_timestamps, n_dims)`.
 A preprocessed version of the dataset [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX).
 
-<img width="230" src="./figures/cebo_logo.png"/>
+<p align="center">
+<img width="700" src="./figures/cebo_logos.png"/>
+</p>
