@@ -18,7 +18,7 @@ from utils import *
 
 def run():
     st.set_page_config(
-        page_title="d_symb",
+        page_title="dsymb-playground",
     )
 
     if "ALL_TS" not in st.session_state:
