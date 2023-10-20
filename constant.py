@@ -106,7 +106,7 @@ to compare the obtained symbolic sequences.
 
 compare_text_1 = """
 
-## Benchmark $d_{symb}$ distance
+## Benchmark the $d_{symb}$ distance
 
 We now illustrate the relevance of the $d_{symb}$ distance measure, compared
 to other existing ones, on a real-world use case.
