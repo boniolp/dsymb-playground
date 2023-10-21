@@ -22,12 +22,11 @@ analysis.
 * [Charles Truong](https://charles.doffy.net/) (Centre Borelli, ENS Paris-Saclay)
 * [Laurent Oudre](http://www.laurentoudre.fr/) (Centre Borelli, ENS Paris-Saclay)
 
-### Acknowledgment
+### Acknowledgments
 
-S. W. Combettes is supported by the IDAML chair of ENS Paris-Saclay, and by a public grant overseen by the French National Research Agency (ANR) through the program UDOPIA, project funded by the ANR-20-THIA-0013-01.
-P. Boniol is funded by SaclAI School.
-C. Truong is funded by the PhLAMES chair of ENS Paris-Saclay.
-Part of the computations has been executed on Atos Edge computer, funded by the IDAML chair of ENS Paris-Saclay.
+Sylvain W. Combettes is supported by the IDAML chair (ENS Paris-Saclay) and UDOPIA (ANR-20-THIA-0013-01).
+Charles Truong is funded by the PhLAMES chair (ENS Paris-Saclay).
+Part of the computations has been executed on Atos Edge computer, funded by the IDAML chair (ENS Paris-Saclay).
 """
 
 

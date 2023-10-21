@@ -82,12 +82,11 @@ streamlit run app.py
 You can then open the app using your web browser. You can upload any kind of time series (one file per time series) with the shape `(n_timestamps, n_dims)`.
 A preprocessed version of the dataset [JIGSAWS dataset](https://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/) can be found [here](https://kiwi.cmla.ens-cachan.fr/index.php/s/ctEdTsz6sxPBxxX).
 
-## Acknowledgment
+## Acknowledgments
 
-S. W. Combettes is supported by the IDAML chair of ENS Paris-Saclay, and by a public grant overseen by the French National Research Agency (ANR) through the program UDOPIA, project funded by the ANR-20-THIA-0013-01.
-P. Boniol is funded by SaclAI School.
-C. Truong is funded by the PhLAMES chair of ENS Paris-Saclay.
-Part of the computations has been executed on Atos Edge computer, funded by the IDAML chair of ENS Paris-Saclay.
+Sylvain W. Combettes is supported by the IDAML chair (ENS Paris-Saclay) and UDOPIA (ANR-20-THIA-0013-01).
+Charles Truong is funded by the PhLAMES chair (ENS Paris-Saclay).
+Part of the computations has been executed on Atos Edge computer, funded by the IDAML chair (ENS Paris-Saclay).
 
 <p align="center">
 <img width="700" src="./figures/cebo_logos.png"/>

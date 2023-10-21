@@ -88,7 +88,7 @@ def plot_symbolization(df_temp, mode, n_symbols):
     fig = ff.create_gantt(
         tmp_df,
         index_col="segment_symbol",
-        bar_width=max(0.45, n_signals * 0.006),
+        bar_width=0.45,
         show_colorbar=True,
         showgrid_x=True,
         group_tasks=True,
@@ -364,7 +364,7 @@ def plot_time_series(ts, tmp_df, n_symbols, dims=[0, 20]):
     fig.update_yaxes(showticklabels=False, row=1, col=1)
     fig.update_layout(
         xaxis_type="linear",
-        height=min(2000, n_dim * 52),
+        height=max(800, n_dim * 52),
         showlegend=False,
         title="Chosen multivariate time series along with its symbolic sequence.",
     )
