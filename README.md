@@ -32,15 +32,30 @@ analysis.
 
 ### Reference
 
+Demo paper:
+> "d_{symb} playground: an interactive tool to explore large multivariate time series datasets"<br/>
+> Authors: Sylvain W. Combettes, Paul Boniol, Charles Truong and Laurent Oudre<br/>
+> _Proceedings of the International Conference on Data Engineering (ICDE)_, Utrecht, Netherlands, 2024.<br/>
+
+```bibtex
+@inproceedings{2024_combettes_dsymb_playground_icde,
+  title={d_{symb} playground: an interactive tool to explore large multivariate time series datasets},
+  author={Sylvain W. Combettes and Paul Boniol and Charles Truong and Laurent Oudre},
+  booktitle={Proceedings of the International Conference on Data Engineering (ICDE) (to appear)},
+  year={2024},
+}
+```
+
+Method paper:
 > "An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals"<br/>
 > Authors: Sylvain W. Combettes, Charles Truong and Laurent Oudre<br/>
-> _Proceedings of the International Conference on Data Mining (AI4TS Workshop) (to appear)_, Shanghai, China, 2023.<br/>
+> _Proceedings of the International Conference on Data Mining Workshops (ICDMW)_, Shanghai, China, 2023.<br/>
 
 ```bibtex
 @inproceedings{2023_combettes_dsymb_icdm,
   title={An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals},
   author={Sylvain W. Combettes and Charles Truong and Laurent Oudre},
-  booktitle={Proceedings of the International Conference on Data Mining (AI4TS Workshop) (to appear)},
+  booktitle={Proceedings of the International Conference on Data Mining Workshops (ICDMW) (to appear)},
   year={2023},
   url={http://www.laurentoudre.fr/publis/ICDM2023.pdf}
 }
