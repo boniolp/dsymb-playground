@@ -48,16 +48,18 @@ Demo paper:
 
 Method paper:
 > "An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals"<br/>
-> Authors: Sylvain W. Combettes, Charles Truong and Laurent Oudre<br/>
+> Authors: Sylvain W. Combettes, Charles Truong, and Laurent Oudre<br/>
 > _Proceedings of the International Conference on Data Mining Workshops (ICDMW)_, Shanghai, China, 2023.<br/>
 
 ```bibtex
 @inproceedings{2023_combettes_dsymb_icdm,
-  title={An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals},
-  author={Sylvain W. Combettes and Charles Truong and Laurent Oudre},
-  booktitle={Proceedings of the International Conference on Data Mining Workshops (ICDMW) (to appear)},
+  author={Combettes, Sylvain W. and Truong, Charles and Oudre, Laurent},
+  booktitle={2023 IEEE International Conference on Data Mining Workshops (ICDMW)}, 
+  title={An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals}, 
   year={2023},
-  url={http://www.laurentoudre.fr/publis/ICDM2023.pdf}
+  pages={533-539},
+  doi={10.1109/ICDMW60847.2023.00076},
+  location={Shanghai, China},
 }
 ```
 
