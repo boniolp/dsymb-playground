@@ -2,7 +2,7 @@
 <img width="230" src="./figures/Symbol_logo.png"/>
 </p>
 
-<h1 align="center">dsymb playground</h1>
+<h1 align="center">d_{symb} playground</h1>
 <h2 align="center">A fast interactive exploration of multivariate time series datasets</h2>
 
 <div align="center">
@@ -32,10 +32,10 @@ analysis.
 
 ### Reference
 
-Demo paper:
-> "d_{symb} playground: an interactive tool to explore large multivariate time series datasets"<br/>
-> Authors: Sylvain W. Combettes, Paul Boniol, Charles Truong and Laurent Oudre<br/>
-> _Proceedings of the International Conference on Data Engineering (ICDE)_, Utrecht, Netherlands, 2024.<br/>
+This repository contains the code that supports the following publication on the $d_{symb}$ playground.
+
+Demo paper of the $d_{symb}$ playground [[paper](https://icde2024.github.io/demos.html) / [PDF](http://www.laurentoudre.fr/publis/dsymb_demo.pdf) / [Streamlit app](https://dsymb-playground.streamlit.app/)]:
+> S. W. Combettes, P. Boniol, C. Truong, and L. Oudre. d_{symb} playground: an interactive tool to explore large multivariate time series datasets. In _Proceedings of the International Conference on Data Engineering (ICDE)_ (to appear), Utrecht, Netherlands, 2024.
 
 ```bibtex
 @inproceedings{2024_combettes_dsymb_playground_icde,
@@ -46,10 +46,8 @@ Demo paper:
 }
 ```
 
-Method paper:
-> "An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals"<br/>
-> Authors: Sylvain W. Combettes, Charles Truong, and Laurent Oudre<br/>
-> _Proceedings of the International Conference on Data Mining Workshops (ICDMW)_, Shanghai, China, 2023.<br/>
+Method paper of $d_{symb}$ [[paper](https://ieeexplore.ieee.org/abstract/document/10411636) / [PDF](http://www.laurentoudre.fr/publis/ICDM2023.pdf) / [code](https://github.com/sylvaincom/d-symb)]:
+> S. W. Combettes, C. Truong, and L. Oudre. An Interpretable Distance Measure for Multivariate Non-Stationary Physiological Signals. In _Proceedings of the International Conference on Data Mining Workshops (ICDMW)_, Shanghai, China, 2023.
 
 ```bibtex
 @inproceedings{2023_combettes_dsymb_icdm,
