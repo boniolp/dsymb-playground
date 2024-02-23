@@ -43,6 +43,7 @@ Demo paper of the $d_{symb}$ playground [[paper](https://icde2024.github.io/demo
   author={Sylvain W. Combettes and Paul Boniol and Charles Truong and Laurent Oudre},
   booktitle={Proceedings of the International Conference on Data Engineering (ICDE) (to appear)},
   year={2024},
+  location={Utrecht, Netherlands},
 }
 ```
 
