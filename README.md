@@ -34,7 +34,7 @@ analysis.
 
 This repository contains the code that supports the following publication on the $d_{symb}$ playground.
 
-Demo paper of the $d_{symb}$ playground [[paper](https://icde2024.github.io/demos.html) / [PDF](http://www.laurentoudre.fr/publis/dsymb_demo.pdf) / [Streamlit app](https://dsymb-playground.streamlit.app/)]:
+Demo paper of the $d_{symb}$ playground [[paper](https://icde2024.github.io/demos.html) / [PDF](http://www.laurentoudre.fr/publis/dsymb_demo.pdf) / [Streamlit app](https://dsymb-playground.streamlit.app/) / [4 min YouTube video](https://youtu.be/4verma-Aqo8)]:
 > S. W. Combettes, P. Boniol, C. Truong, and L. Oudre. d_{symb} playground: an interactive tool to explore large multivariate time series datasets. In _Proceedings of the International Conference on Data Engineering (ICDE)_ (to appear), Utrecht, Netherlands, 2024.
 
 ```bibtex
