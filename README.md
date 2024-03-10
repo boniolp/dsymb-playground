@@ -81,7 +81,7 @@ cd dsymb-playground/
 **Step 2:** Create and activate a `conda` environment and install the dependencies.
 
 ```bash
-conda env create -n dsymb-playground python=3.9
+conda create -n dsymb-playground python=3.9
 conda activate dsymb-playground
 pip install -r requirements.txt
 ```
