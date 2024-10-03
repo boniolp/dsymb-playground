@@ -65,7 +65,7 @@ Method paper of $d_{symb}$ [[paper](https://ieeexplore.ieee.org/abstract/documen
 ## Contributors
 
 * [Sylvain W. Combettes](https://sylvaincom.github.io/) (Centre Borelli, ENS Paris-Saclay)
-* [Paul Boniol](https://boniolp.github.io/) (Centre Borelli, ENS Paris-Saclay)
+* [Paul Boniol](https://boniolp.github.io/) (Inria, ENS, DIENS, PSL, CNRS)
 * [Charles Truong](https://charles.doffy.net/) (Centre Borelli, ENS Paris-Saclay)
 * [Laurent Oudre](http://www.laurentoudre.fr/) (Centre Borelli, ENS Paris-Saclay)
 
